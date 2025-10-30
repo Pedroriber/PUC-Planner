@@ -35,22 +35,7 @@
         </div>
     </main>
 
-    <footer class="bg-navy text-white">
-        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
-            <div class="flex items-center">
-                <img alt="LOGO PUC" class="w-20 h-40 pr-2" src="{% static 'images/logo puc brasão.svg' %}"/>
-                <nav class="flex flex-wrap gap-x-10 gap-y-2 font-regular pl-10">
-                    <a class="hover:underline" href="https://sau.puc-rio.br/WebLoginPucOnline/LayoutLoginPucOnline/PaginasEstaticas/escolhaPerfil.html?ReturnUrl=%2f" target="_blank">SAU</a>
-                    <a class="hover:underline" href="https://www.ctc.puc-rio.br/" target="_blank">CTC</a>
-                    <a class="hover:underline" href="https://www.cbctc.puc-rio.br/" target="_blank">CBCTC</a>
-                    <a class="hover:underline" href="https://microhorario.rdc.puc-rio.br/WebMicroHorarioConsulta/MicroHorarioConsulta.aspx?sessao=U2lzdGVtYT1QVUNPTkxJTkVfQUxVTk8mQXBsaWNhY2FvPU1JQ1JPX0hPUkFSSU8mRnVuY2FvPUNPTlNVTFRBJklEPWIyMTliZWVhNDZiNDRiZWQ4NTU5MDk5MjgyMDBjZWNl" target="_blank">MICRO HORÁRIO</a>
-                </nav>
-            </div>
-            <div class="mt-6 md:mt-0 text-sm font-regular">
-                © 2025. Todos os direitos reservados.
-            </div>
-        </div>
-    </footer>
+    {% include 'includes/footer.html' %}
 </div>
 
 <script src="{% static 'js/buscaFluxograma.js' %}"></script>

@@ -37,27 +37,5 @@
     </div>
 </main>
 
-<footer class="rodape">
-    <div class="rodape-conteudo">
-        <div class="rodape-logo">
-            <a href="#"> 
-                <img src="{% static 'images/logo puc brasao1.svg' %}" alt="PUC Planner Logo">
-            </a>
-        </div>
-        
-        <nav class="rodape-links-container">
-            <a href="https://www.ctc.puc-rio.br/" target="_blank">CTC</a>
-            <span>|</span>
-            <a href="https://www.cbctc.puc-rio.br/" target="_blank">CICLO BÁSICO</a>
-            <span>|</span>
-            <a href="https://sau.puc-rio.br/WebLoginPucOnline/Default.aspx?sessao=VmluY3Vsbz1BJlNpc3RMb2dpbj1QVUNPTkxJTkVfQUxVTk8mQXBwTG9naW49TE9HSU4mRnVuY0xvZ2luPUxPR0lOJlNpc3RNZW51PVBVQ09OTElORV9BTFVOTyZBcHBNZW51PU1FTlUmRnVuY21lbnU9TUVOVQ__" target="_blank">SAU</a>
-            <span>|</span>
-            <a href="https://microhorario.rdc.puc-rio.br/WebMicroHorarioConsulta/MicroHorarioConsulta.aspx" target="_blank">MICRO HORÁRIO</a>
-        </nav>
-
-        <div class="rodape-copyright">
-            <p class="copyright">&copy; 2025. Todos os direitos reservados.</p>
-        </div>
-    </div>
-</footer>
+{% include 'includes/footer_auth.html' %}
 {% endblock %}
