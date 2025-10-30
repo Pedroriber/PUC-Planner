@@ -1,0 +1,23 @@
+body {
+            font-family: 'Rethink Sans', sans-serif;
+        }
+        .superbold {
+            font-weight: 700;
+        }
+        .regular {
+            font-weight: 400;
+        }
+        .flowchart-item {
+            border: 2px solid #0000a9;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            background-color: white;
+            text-align: center;
+            position: absolute;
+            font-family:'Rethink Sans', sans-serif;
+            font-weight: 400;
+            color: #0000a9;
+        }
+        .bg-navy {
+            background-color: #030053;
+        }

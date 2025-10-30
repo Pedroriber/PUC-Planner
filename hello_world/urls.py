@@ -23,10 +23,23 @@ from django.conf.urls.static import static
 from hello_world.core import views as core_views
 
 urlpatterns = [
-    path("", core_views.index),
+    # Página inicial antiga (exemplo)
+    path("exemplo/", core_views.index, name="index"),
+    
+    # Páginas principais do PUC Planner
+    path("", core_views.home, name="home"),
+    path("login/", core_views.login_view, name="login"),
+    path("cadastro/", core_views.cadastro, name="cadastro"),
+    path("esqueci-senha/", core_views.esqueci_senha, name="esqueci_senha"),
+    path("consulta-disciplina/", core_views.consulta_disciplina, name="consulta_disciplina"),
+    path("fluxograma/", core_views.fluxograma, name="fluxograma"),
+    path("grade-horaria/", core_views.grade_horaria, name="grade_horaria"),
+    
+    # Admin
     path("admin/", admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

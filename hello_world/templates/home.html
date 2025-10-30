@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Início - PUC Planner{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home_page.css' %}">
+{% endblock %}
+
+{% block content %}
+<body class="bg-gray-100 font-regular">
+<header class="flex justify-between items-center py-4 bg-navy text-white px-8">
+    <a href="{% url 'home' %}">
+        <div class="text-2xl font-superbold">
+            <img src="{% static 'images/logo_puc_planner_fundoazul.svg' %}" width="200px" style="border-radius: 20px;">
+        </div>
+    </a>
+    <h1 class="text-3xl font-superbold" style="padding-left: -200px; margin-left: -200px;">Bem-vindo(a)!</h1>
+    <button class="text-white"></button>
+</header>
+
+<main>
+    <section class="relative bg-cover bg-center h-96" style="background-image: url('https://www.puc-rio.br/sobrepuc/campus/imagens/img_campus_banner_index.jpg');">
+        <div class="absolute inset-0 bg-black opacity-50"></div>
+        <div class="relative container mx-auto px-6 py-24 flex flex-col items-center justify-center text-center h-full">
+            <h1 class="text-4xl md:text-6xl text-white leading-tight font-bold">Escolher as disciplinas nunca foi tão fácil e prático.</h1>
+            <button class="mt-8 rounded-full shadow-lg transition duration-300 btn-comecar py-3 px-8">Começar</button>
+        </div>
+    </section>
+
+    <section class="bg-white py-16">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <a href="{% url 'consulta_disciplina' %}">
+                    <div class="bg-navy text-white p-8 rounded-lg shadow-lg transition-shadow duration-300 card-hover">
+                        <h2 class="text-2xl mb-4">Consulte as disciplinas</h2>
+                        <p class="font-regular">Veja todas as matérias disponíveis para o seu curso e período.</p>
+                    </div>
+                </a>
+                <a href="{% url 'fluxograma' %}">
+                    <div class="bg-navy text-white p-8 rounded-lg shadow-lg transition-shadow duration-300 card-hover">
+                        <h2 class="text-2xl mb-4">Crie um fluxograma</h2>
+                        <p class="font-regular">Visualize seu progresso e planeje seus próximos passos na graduação.</p>
+                    </div>
+                </a>
+                <a href="{% url 'grade_horaria' %}">
+                    <div class="bg-navy text-white p-8 rounded-lg shadow-lg transition-shadow duration-300 card-hover">
+                        <h2 class="text-2xl mb-4">Monte sua grade horária</h2>
+                        <p class="font-regular">Organize suas aulas de forma intuitiva e sem conflitos de horário.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="bg-navy text-white">
+    <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+        <div class="flex items-center">
+            <img alt="LOGO PUC" class="w-20 h-40 pr-2" src="{% static 'images/logo puc brasão.svg' %}"/>
+            <nav class="flex flex-wrap gap-x-10 gap-y-2 font-regular pl-10">
+                <a class="hover:underline" href="https://sau.puc-rio.br/WebLoginPucOnline/LayoutLoginPucOnline/PaginasEstaticas/escolhaPerfil.html?ReturnUrl=%2f" target="_blank">SAU</a>
+                <a class="hover:underline" href="https://www.ctc.puc-rio.br/" target="_blank">CTC</a>
+                <a class="hover:underline" href="https://www.cbctc.puc-rio.br/" target="_blank">CBCTC</a>
+                <a class="hover:underline" href="https://microhorario.rdc.puc-rio.br/WebMicroHorarioConsulta/MicroHorarioConsulta.aspx?sessao=U2lzdGVtYT1QVUNPTkxJTkVfQUxVTk8mQXBsaWNhY2FvPU1JQ1JPX0hPUkFSSU8mRnVuY2FvPUNPTlNVTFRBJklEPWIyMTliZWVhNDZiNDRiZWQ4NTU5MDk5MjgyMDBjZWNl" target="_blank">MICRO HORÁRIO</a>
+            </nav>
+        </div>
+        <div class="mt-6 md:mt-0 text-sm font-regular">
+            © 2025. Todos os direitos reservados.
+        </div>
+    </div>
+</footer>
+
+<div id="loginModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+    <div id="loginBox" class="bg-[#ffffff] rounded-lg shadow-lg p-8 flex flex-col items-center min-w-[500px]" onclick="event.stopPropagation();">
+        <h2 class="text-5xl font-extrabold text-navy mb-6">Login</h2>
+        <input type="text" placeholder="Usuário" class="mb-4 w-full px-4 py-2 border border-navy rounded text-navy font-bold bg-transparent placeholder:text-navy focus:outline-none" />
+        <input type="password" placeholder="Senha" class="mb-6 w-full px-4 py-2 border border-navy rounded text-navy font-bold bg-transparent placeholder:text-navy focus:outline-none" />
+        <button onclick="closeModal()" class="bg-navy text-white px-8 py-2 rounded font-regular shadow hover:bg-[#030080] transition">Entrar</button>
+    </div>
+</div>
+
+<script>
+    const modal = document.getElementById('loginModal');
+    document.querySelector('.btn-comecar').onclick = function() {
+        modal.classList.remove('hidden');
+    };
+    function closeModal() {
+        modal.classList.add('hidden');
+    }
+    modal.onclick = function(event) {
+        if (event.target === modal) {
+            closeModal();
+        }
+    };
+</script>
+</body>
+{% endblock %}
