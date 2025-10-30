@@ -5,6 +5,45 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/tela_cadastro_styles.css' %}">
+<style>
+  /* Estilos para mensagens de feedback */
+  .messages {
+    margin-bottom: 20px;
+  }
+  
+  .alert {
+    padding: 12px 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+  }
+  
+  .alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  
+  .alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+  
+  .alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+  }
+  
+  .alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+  }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -19,7 +58,18 @@
 <main class="conteudo-principal">
     <div class="cadastro-container">
         <h2 class="titulo-formulario">Preencha seus dados</h2>
-        <form class="formulario" method="post">
+        
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <form class="formulario" method="post" id="cadastroForm">
             {% csrf_token %}
             
             <div class="input-group">
@@ -39,7 +89,12 @@
 
             <div class="input-group">
                 <i class="fas fa-lock icon"></i>
-                <input type="password" id="senha" name="senha" placeholder="Senha" required>
+                <input type="password" id="senha" name="senha" placeholder="Senha" minlength="6" required>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-lock icon"></i>
+                <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="Confirmar senha" minlength="6" required>
             </div>
 
             <button type="submit" class="botao-cadastro">CADASTRAR</button>
@@ -50,6 +105,25 @@
         </p>
     </div>
 </main>
+
+<script>
+    document.getElementById('cadastroForm').addEventListener('submit', function(e) {
+        const senha = document.getElementById('senha').value;
+        const confirmarSenha = document.getElementById('confirmar_senha').value;
+        
+        if (senha !== confirmarSenha) {
+            e.preventDefault();
+            alert('As senhas não coincidem. Por favor, verifique.');
+            return false;
+        }
+        
+        if (senha.length < 6) {
+            e.preventDefault();
+            alert('A senha deve ter no mínimo 6 caracteres.');
+            return false;
+        }
+    });
+</script>
 
 {% include 'includes/footer_auth.html' %}
 {% endblock %}

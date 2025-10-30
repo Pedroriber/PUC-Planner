@@ -17,8 +17,15 @@ def login_view(request):
     if request.method == "POST":
         matricula = request.POST.get("matricula")
         password = request.POST.get("password")
+        
+        # Validações básicas
+        if not matricula or not password:
+            messages.error(request, "Matrícula e senha são obrigatórios!")
+            return render(request, "login.html")
+        
         # TODO: Implementar autenticação real
-        messages.success(request, "Login realizado com sucesso!")
+        # Por enquanto, apenas simula sucesso
+        messages.success(request, "Login simulado com sucesso! (Autenticação será implementada)")
         return redirect("home")
     return render(request, "login.html")
 
@@ -29,8 +36,24 @@ def cadastro(request):
         matricula = request.POST.get("matricula")
         email = request.POST.get("email")
         senha = request.POST.get("senha")
+        confirmar_senha = request.POST.get("confirmar_senha")
+        
+        # Validações
+        if not all([nome, matricula, email, senha, confirmar_senha]):
+            messages.error(request, "Todos os campos são obrigatórios!")
+            return render(request, "cadastro.html")
+        
+        if senha != confirmar_senha:
+            messages.error(request, "As senhas não coincidem!")
+            return render(request, "cadastro.html")
+        
+        if len(senha) < 6:
+            messages.error(request, "A senha deve ter no mínimo 6 caracteres!")
+            return render(request, "cadastro.html")
+        
+        # TODO: Verificar se matrícula ou email já existem
         # TODO: Implementar cadastro real no banco de dados
-        messages.success(request, "Cadastro realizado com sucesso!")
+        messages.success(request, "Cadastro realizado com sucesso! Faça login para continuar.")
         return redirect("login")
     return render(request, "cadastro.html")
 
@@ -38,8 +61,14 @@ def esqueci_senha(request):
     """Tela de recuperação de senha"""
     if request.method == "POST":
         email = request.POST.get("email")
+        
+        if not email:
+            messages.error(request, "Por favor, insira um e-mail válido!")
+            return render(request, "esqueci_senha.html")
+        
+        # TODO: Verificar se o email existe no banco de dados
         # TODO: Implementar envio de email de recuperação
-        messages.success(request, "Link de recuperação enviado para seu e-mail!")
+        messages.success(request, "Se o e-mail estiver cadastrado, você receberá um link de recuperação!")
         return redirect("login")
     return render(request, "esqueci_senha.html")
 
