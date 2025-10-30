@@ -2,6 +2,12 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
+from django.conf import settings
 from django.db import IntegrityError
 
 User = get_user_model()
@@ -115,27 +121,119 @@ def cadastro(request):
     return render(request, "cadastro.html")
 
 def esqueci_senha(request):
-    """Tela de recuperação de senha - versão simplificada"""
+    """Tela de recuperação de senha - Envia email com link"""
     if request.method == "POST":
         email = request.POST.get("email", "").strip()
+        
+        print(f"[DEBUG] Email recebido: '{email}'")
         
         if not email:
             messages.error(request, "Por favor, insira um e-mail válido!")
             return render(request, "esqueci_senha.html")
         
-        # Verifica se o email existe
         try:
             user = User.objects.get(email=email)
-            # TODO: Implementar envio de email com link de recuperação
-            # Por enquanto, apenas informa sucesso
-            messages.success(request, "Se o e-mail estiver cadastrado, você receberá instruções de recuperação!")
+            print(f"[DEBUG] Usuário encontrado: {user.nome_completo} ({user.email})")
+            
+            # Gera token de recuperação
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            
+            print(f"[DEBUG] Token gerado: {token}")
+            print(f"[DEBUG] UID: {uid}")
+            
+            # Cria o link de recuperação
+            reset_link = request.build_absolute_uri(
+                f'/redefinir-senha/{uid}/{token}/'
+            )
+            
+            print(f"[DEBUG] Link de recuperação: {reset_link}")
+            
+            # Prepara o email
+            subject = 'Recuperação de Senha - PUC Planner'
+            message = f"""
+Olá {user.nome_completo},
+
+Você solicitou a recuperação de senha para sua conta no PUC Planner.
+
+Clique no link abaixo para redefinir sua senha:
+{reset_link}
+
+Este link é válido por 24 horas.
+
+Se você não solicitou esta recuperação, ignore este email.
+
+Atenciosamente,
+Equipe PUC Planner
+            """
+            
+            print(f"[DEBUG] Tentando enviar email para: {user.email}")
+            
+            # Envia o email
+            send_mail(
+                subject,
+                message,
+                'noreply@pucplanner.com',
+                [user.email],
+                fail_silently=False,
+            )
+            
+            print(f"[DEBUG] Email enviado com sucesso!")
+            
+            messages.success(request, "Email de recuperação enviado! Verifique sua caixa de entrada (ou o console do terminal).")
+            
         except User.DoesNotExist:
+            print(f"[DEBUG] Usuário com email '{email}' não encontrado")
             # Não revela se o email existe ou não por segurança
             messages.success(request, "Se o e-mail estiver cadastrado, você receberá instruções de recuperação!")
+        except Exception as e:
+            print(f"[DEBUG] ERRO ao enviar email: {e}")
+            import traceback
+            traceback.print_exc()
+            messages.error(request, f"Erro ao enviar email: {str(e)}")
         
         return redirect("login")
     
     return render(request, "esqueci_senha.html")
+
+
+def redefinir_senha(request, uidb64, token):
+    """Página para redefinir a senha usando o token do email"""
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    
+    # Valida o token
+    if user is not None and default_token_generator.check_token(user, token):
+        if request.method == "POST":
+            nova_senha = request.POST.get("nova_senha", "")
+            confirmar_senha = request.POST.get("confirmar_senha", "")
+            
+            if not nova_senha or not confirmar_senha:
+                messages.error(request, "Todos os campos são obrigatórios!")
+                return render(request, "redefinir_senha.html", {"validlink": True})
+            
+            if nova_senha != confirmar_senha:
+                messages.error(request, "As senhas não coincidem!")
+                return render(request, "redefinir_senha.html", {"validlink": True})
+            
+            if len(nova_senha) < 6:
+                messages.error(request, "A senha deve ter no mínimo 6 caracteres!")
+                return render(request, "redefinir_senha.html", {"validlink": True})
+            
+            # Altera a senha
+            user.set_password(nova_senha)
+            user.save()
+            
+            messages.success(request, "Senha redefinida com sucesso! Faça login com sua nova senha.")
+            return redirect("login")
+        
+        return render(request, "redefinir_senha.html", {"validlink": True})
+    else:
+        messages.error(request, "Link de recuperação inválido ou expirado!")
+        return render(request, "redefinir_senha.html", {"validlink": False})
 
 
 @login_required

@@ -23,6 +23,81 @@
   .header-login .welcome-text {
     text-align: center;
     margin: 0;
+    font-weight: 600;
+  }
+  
+  /* Estilo do card e formulário */
+  .card {
+    background-color: white;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+  }
+  
+  .card h2 {
+    color: #030053;
+    margin-bottom: 1rem;
+    font-size: 1.6rem;
+  }
+  
+  /* Botão amarelo como no cadastro */
+  button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #ffae00 !important;
+    color: #030053 !important;
+    border: none;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: 740;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s, transform 0.1s;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #e3a000 !important;
+  }
+  
+  /* Input fields */
+  input[type="email"] {
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    width: 100%;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  
+  input[type="email"]:focus {
+    border-color: #ffae00;
+    box-shadow: 0 0 0 1px #ffae00;
+    outline: none;
+  }
+  
+  label {
+    text-align: left;
+    font-weight: 500;
+    color: #333;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  .back {
+    display: inline-block;
+    margin-top: 1.2rem;
+    color: #030053;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+  }
+  
+  .back:hover {
+    opacity: 0.8;
+    text-decoration: underline;
   }
   
   /* Estilos para mensagens de feedback */

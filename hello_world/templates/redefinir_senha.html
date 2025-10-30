@@ -1,15 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Login - PUC Planner{% endblock %}
+{% block title %}Redefinir Senha - PUC Planner{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/login_styles.css' %}">
+<link rel="stylesheet" href="{% static 'css/esqueci-senha.css' %}">
 <style>
-  body, .login-form, .input-group label, .input-group input, .btn-login, .welcome-text {
-    font-family: 'Poppins', sans-serif !important;
-  }
-  
   /* Ajustes de cor e centralização */
   .header-login {
     background-color: #030053 !important;
@@ -30,8 +26,25 @@
     font-weight: 600;
   }
   
+  /* Estilo do card e formulário */
+  .card {
+    background-color: white;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+  }
+  
+  .card h2 {
+    color: #030053;
+    margin-bottom: 1rem;
+    font-size: 1.6rem;
+  }
+  
   /* Botão amarelo como no cadastro */
-  .btn-login {
+  button[type="submit"] {
     width: 100%;
     padding: 12px;
     background-color: #ffae00 !important;
@@ -41,73 +54,49 @@
     font-size: 15px;
     font-weight: 740;
     cursor: pointer;
-    margin-top: 20px;
+    margin-top: 10px;
     transition: background-color 0.3s, transform 0.1s;
   }
   
-  .btn-login:hover {
+  button[type="submit"]:hover {
     background-color: #e3a000 !important;
   }
   
-  /* Input fields com foco amarelo */
-  .input-group {
-    margin-bottom: 15px;
-  }
-  
-  .input-group input {
-    width: 100%;
-    padding: 12px;
+  /* Input fields */
+  input[type="password"] {
+    padding: 0.75rem;
     border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
+    border-radius: 8px;
+    font-size: 1rem;
+    width: 100%;
     transition: border-color 0.3s, box-shadow 0.3s;
   }
   
-  .input-group input:focus {
+  input[type="password"]:focus {
     border-color: #ffae00;
     box-shadow: 0 0 0 1px #ffae00;
     outline: none;
   }
   
-  .input-group label {
-    display: block;
-    margin-bottom: 5px;
-    color: #333;
+  label {
+    text-align: left;
     font-weight: 500;
-  }
-  
-  /* Container do login */
-  .login-container {
-    background-color: white;
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 420px;
-  }
-  
-  .login-form h2 {
-    color: #030053;
-    margin-bottom: 30px;
-    font-size: 24px;
-    font-weight: 700;
-    text-align: center;
-  }
-  
-  .forgot-password {
-    margin-top: 20px;
-    font-size: 14px;
     color: #333;
-    text-align: center;
+    display: block;
+    margin-bottom: 0.5rem;
   }
   
-  .forgot-password a {
+  .back {
+    display: inline-block;
+    margin-top: 1.2rem;
     color: #030053;
     text-decoration: none;
     font-weight: 500;
+    transition: opacity 0.3s ease;
   }
   
-  .forgot-password a:hover {
+  .back:hover {
+    opacity: 0.8;
     text-decoration: underline;
   }
   
@@ -118,10 +107,11 @@
   
   .alert {
     padding: 12px 15px;
-    border-radius: 5px;
+    border-radius: 8px;
     margin-bottom: 10px;
     font-size: 14px;
     font-weight: 500;
+    text-align: center;
   }
   
   .alert-success {
@@ -155,16 +145,14 @@
     <div class="logo">
         <img src="{% static 'images/logo_puc_planner_fundoazul.svg' %}" alt="PUC Planner Logo">
     </div>
-    <p class="welcome-text">Bem-vindo(a)!</p>
+    <p class="welcome-text">Redefinir Senha</p>
 </header>
 
-<main class="content-wrapper">
-    <div class="background-image-container"></div>
-
-    <div class="login-container">
-        <form class="login-form" method="post">
-            {% csrf_token %}
-            <h2>Acesso à conta</h2>
+<main class="container">
+    <div class="card">
+        {% if validlink %}
+            <h2>Nova Senha</h2>
+            <p>Digite sua nova senha abaixo.</p>
 
             {% if messages %}
                 <div class="messages">
@@ -176,23 +164,38 @@
                 </div>
             {% endif %}
 
-            <div class="input-group">
-                <label for="matricula">Usuário</label>
-                <input type="text" id="matricula" name="matricula" placeholder="Matrícula" required>
-            </div>
+            <form method="post">
+                {% csrf_token %}
+                
+                <label for="nova_senha">Nova Senha</label>
+                <input
+                    type="password"
+                    id="nova_senha"
+                    name="nova_senha"
+                    placeholder="Mínimo 6 caracteres"
+                    minlength="6"
+                    required
+                />
+                
+                <label for="confirmar_senha">Confirmar Nova Senha</label>
+                <input
+                    type="password"
+                    id="confirmar_senha"
+                    name="confirmar_senha"
+                    placeholder="Digite a senha novamente"
+                    minlength="6"
+                    required
+                />
+                
+                <button type="submit">Redefinir Senha</button>
+            </form>
+        {% else %}
+            <h2>Link Inválido</h2>
+            <p>O link de recuperação é inválido ou já expirou.</p>
+            <a href="{% url 'esqueci_senha' %}" class="back">Solicitar novo link</a>
+        {% endif %}
 
-            <div class="input-group">
-                <label for="password">Senha</label>
-                <input type="password" id="password" name="password" placeholder="Senha" required>
-            </div>
-
-            <button type="submit" class="btn-login">Entrar</button>
-
-            <p class="forgot-password">
-                <a href="{% url 'esqueci_senha' %}">Esqueceu sua senha?</a> | 
-                <a href="{% url 'cadastro' %}">Criar conta</a>
-            </p>
-        </form>
+        <a href="{% url 'login' %}" class="back">Voltar para o login</a>
     </div>
 </main>
 

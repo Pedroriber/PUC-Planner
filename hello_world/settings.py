@@ -142,6 +142,24 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
 
+# Session Settings - Expira ao fechar o navegador
+SESSION_COOKIE_AGE = 3600  # 1 hora em segundos
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Sessão expira ao fechar o navegador
+SESSION_SAVE_EVERY_REQUEST = True  # Renova a sessão a cada request
+
+# Email Configuration
+# Para desenvolvimento, usar console backend (emails aparecem no terminal)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Para produção, descomentar e configurar com SMTP real:
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
+# EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+# DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@pucplanner.com')
+
 # Password validation - Relaxed for development
 AUTH_PASSWORD_VALIDATORS = [
     {

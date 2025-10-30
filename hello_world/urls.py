@@ -32,6 +32,7 @@ urlpatterns = [
     path("logout/", core_views.logout_view, name="logout"),
     path("cadastro/", core_views.cadastro, name="cadastro"),
     path("esqueci-senha/", core_views.esqueci_senha, name="esqueci_senha"),
+    path("redefinir-senha/<uidb64>/<token>/", core_views.redefinir_senha, name="redefinir_senha"),
     path("consulta-disciplina/", core_views.consulta_disciplina, name="consulta_disciplina"),
     path("fluxograma/", core_views.fluxograma, name="fluxograma"),
     path("grade-horaria/", core_views.grade_horaria, name="grade_horaria"),
