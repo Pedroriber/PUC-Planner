@@ -6,6 +6,25 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/esqueci-senha.css' %}">
 <style>
+  /* Ajustes de cor e centralização */
+  .header-login {
+    background-color: #030053 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .header-login .logo {
+    margin-bottom: 10px;
+  }
+  
+  .header-login .welcome-text {
+    text-align: center;
+    margin: 0;
+  }
+  
   /* Estilos para mensagens de feedback */
   .messages {
     margin-bottom: 20px;

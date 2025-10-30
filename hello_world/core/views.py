@@ -15,8 +15,9 @@ def index(request):
     return render(request, "index.html", context)
 
 
+@login_required
 def home(request):
-    """Página inicial do PUC Planner"""
+    """Página inicial do PUC Planner - Requer autenticação"""
     return render(request, "home.html")
 
 def login_view(request):

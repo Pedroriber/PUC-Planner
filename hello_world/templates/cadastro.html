@@ -6,6 +6,29 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/tela_cadastro_styles.css' %}">
 <style>
+  /* Ajustes de cor e centralização */
+  .cabecalho {
+    background-color: #030053 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .cabecalho .logo {
+    margin-bottom: 10px;
+  }
+  
+  .cabecalho .titulo-pagina {
+    text-align: center;
+    margin: 0;
+  }
+  
+  .cabecalho .espacador {
+    display: none;
+  }
+  
   /* Estilos para mensagens de feedback */
   .messages {
     margin-bottom: 20px;
