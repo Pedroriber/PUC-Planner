@@ -29,6 +29,7 @@ urlpatterns = [
     # Páginas principais do PUC Planner
     path("", core_views.home, name="home"),
     path("login/", core_views.login_view, name="login"),
+    path("logout/", core_views.logout_view, name="logout"),
     path("cadastro/", core_views.cadastro, name="cadastro"),
     path("esqueci-senha/", core_views.esqueci_senha, name="esqueci_senha"),
     path("consulta-disciplina/", core_views.consulta_disciplina, name="consulta_disciplina"),
