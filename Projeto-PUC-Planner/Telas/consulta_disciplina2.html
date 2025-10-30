@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Resultado da pesquisa</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
+<link rel="shortcut icon" href="../Recursos de Estilo/logo puc brasão.svg" type="image/x-icon">
+<link rel="stylesheet" href="consulta_disciplina2.css">
+</head>
+<body class="bg-gray-100 font-regular">
+<div class="flex flex-col h-screen">
+<header class="flex justify-between items-center py-4 bg-navy text-white px-8">
+<a href="home page.html">
+  <div class="text-2xl font-superbold">
+    <img src="../Recursos de Estilo/logo_puc_planner_fundoazul.svg" width="200px" style="border-radius: 20px;">
+</div>
+</a>
+<h1 class="text-3xl font-superbold" style="margin-left: -200px; padding-left: -200px;">Consulta de disciplinas</h1>
+<button class="text-white">
+</button>
+</header>
+<main class="flex-grow bg-white p-6 shadow-md flex flex-col items-center justify-center"
+      style="background-image: url('../Recursos de Estilo/testefundosetas.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+<div class="max-w-4xl w-full">
+<div class="mb-6 relative">
+<span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+<input class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-navy focus:border-navy" placeholder="Digite o nome ou código da disciplina" type="text"/>
+</div>
+<div class="mb-8">
+<div class="bg-white border border-navy rounded-lg p-4 flex justify-between items-center cursor-pointer">
+<span class="text-navy font-medium">ENG4021 - Projeto Integrado de Software - Ver pré e co-requisitos</span>
+<span class="material-icons text-navy">expand_more</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="bg-white rounded-lg border border-navy p-6 shadow-md flex flex-col items-center">
+        <h2 class="text-xl font-semibold mb-2 text-navy text-center">Pré-requisitos</h2>
+        <div class="space-y-4 text-center w-full">
+            <div class="text-lg text-gray-700">ENG1000</div>
+            <div class="text-sm font-medium text-gray-500">ou</div>
+            <div class="text-lg text-gray-700">ENG1127</div>
+            <div class="text-sm font-medium text-gray-500">ou</div>
+            <div class="text-lg text-gray-700">ENG4010</div>
+        </div>
+    </div>
+    <div class="bg-white rounded-lg border border-navy p-6 shadow-md flex flex-col items-center">
+        <h2 class="text-xl font-semibold mb-2 text-navy text-center">Co-requisitos</h2>
+        <div class="space-y-4 text-center w-full">
+            <div class="text-lg text-gray-700">EMP1320 + INF1037</div>
+            <div class="text-sm font-medium text-gray-500">ou</div>
+            <div class="text-lg text-gray-700">EMP1320 + INF1026</div>
+            <div class="text-sm font-medium text-gray-500">ou</div>
+            <div class="text-lg text-gray-700">EMP1320 + INF1007</div>
+        </div>
+    </div>
+</div>
+</div>
+</main>
+<footer class="bg-navy text-white">
+<div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+<div class="flex items-center">
+<img alt="LOGO PUC" class="w-20 h-40 pr-2" src="../Recursos de Estilo/logo puc brasão.svg"/>
+<nav class="flex flex-wrap gap-x-10 gap-y-2 font-regular pl-10">
+<a class="hover:underline" href="https://sau.puc-rio.br/WebLoginPucOnline/LayoutLoginPucOnline/PaginasEstaticas/escolhaPerfil.html?ReturnUrl=%2f"target="_blank">SAU</a>
+<a class="hover:underline" href="https://www.ctc.puc-rio.br/"target="_blank">CTC</a>
+<a class="hover:underline" href="https://www.cbctc.puc-rio.br/"target="_blank">CBCTC</a>
+<a class="hover:underline" href="https://microhorario.rdc.puc-rio.br/WebMicroHorarioConsulta/MicroHorarioConsulta.aspx?sessao=U2lzdGVtYT1QVUNPTkxJTkVfQUxVTk8mQXBsaWNhY2FvPU1JQ1JPX0hPUkFSSU8mRnVuY2FvPUNPTlNVTFRBJklEPWIyMTliZWVhNDZiNDRiZWQ4NTU5MDk5MjgyMDBjZWNl"target="_blank">MICRO HORÁRIO</a>
+</nav>
+</div>
+<div class="mt-6 md:mt-0 text-sm font-regular">
+            © 2025. Todos os direitos reservados.
+        </div>
+</footer>
+</div>
+</div>
+
+</body></html>
