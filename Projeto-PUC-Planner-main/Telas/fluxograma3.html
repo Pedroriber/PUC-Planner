@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Resultado da pesquisa</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@400;700&family=Rethink+Sans:wght@400;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
+<link rel="shortcut icon" href="../Recursos de Estilo/logo puc brasão.svg" type="image/x-icon">
+<link rel="stylesheet" href="fluxograma2.css">
+</head>
+<body class="bg-white text-navy flex flex-col min-h-screen">
+<div class="flex flex-col h-screen">
+<header class="flex justify-between items-center py-4 bg-navy text-white px-8">
+<a href="home page.html">
+  <div class="text-2xl font-superbold">
+    <img src="../Recursos de Estilo/logo_puc_planner_fundoazul.svg" width="200px" style="border-radius: 20px;">
+</div>
+</a>
+<h1 class="text-3xl font-superbold flex-1 text-center">Fluxograma</h1>
+
+<div style="width:200px" class="flex items-center justify-end">
+  <button id="download-pdf" class="bg-white text-blue-900 font-bold py-2 px-4 rounded shadow hover:opacity-90 flex items-center">
+    <span class="material-icons mr-2" aria-hidden="true" style="font-size:20px">download</span>
+    Baixar PDF
+  </button>
+</div>
+</header>
+<div class="container mx-auto px-4 max-w-6xl">
+<main class="py-8">
+<h2 class="text-center text-2xl superbold mb-12 text-blue-900">Curso: Engenharia de Produção</h2>
+<div id="flowchart" class="relative h-[650px] w-full">
+<a href="https://www.puc-rio.br/ferramentas/ementas/ementa.aspx?cd=CTC4002" target="_blank">
+  <div class="flowchart-item" style="top: 20px; left: 2%;">CTC 4002</div>
+</a>
+
+<a href="https://www.puc-rio.br/ferramentas/ementas/ementa.aspx?cd=MAT4162" target="_blank">
+  <div class="flowchart-item" style="top: 20px; left: 34%;">MAT 4162</div>
+</a>
+<a href="https://www.puc-rio.br/ferramentas/ementas/ementa.aspx?cd=ENG4010" target="_blank">
+  <div class="flowchart-item" style="top: 20px; left: 50%;">ENG 4010</div>
+</a>
+<a href="https://www.puc-rio.br/ferramentas/ementas/ementa.aspx?cd=FIS4001" target="_blank">
+  <div class="flowchart-item" style="top: 20px; left: 66%;">FIS 4001</div>
+</a>
+<a href="https://www.puc-rio.br/ferramentas/ementas/ementa.aspx?cd=MAT4161" target="_blank">
+  <div class="flowchart-item" style="top: 20px; left: 82%;">MAT 4161</div>
+</a>
+<a href="https://www.puc-rio.br/ferramentas/ementas/ementa.aspx?cd=INF1037" target="_blank">
+  <div class="flowchart-item" style="top: 150px; left: 9%;">INF 1037</div>
+</a>
+<a href="https://www.puc-rio.br/ferramentas/ementas/ementa.aspx?cd=INF1009" target="_blank">
+  <div class="flowchart-item" style="top: 150px; left: 42%;">INF 1009</div>
+</a>
+<a href="https://www.puc-rio.br/ferramentas/ementas/ementa.aspx?cd=CTC4001" target="_blank">
+  <div class="flowchart-item" style="top: 150px; left: 75%;">CTC 4001</div>
+</a>
+<a href="https://www.puc-rio.br/ensinopesq/ccg/eng_producao.html" target="_blank">
+  <div class="flowchart-item" style="top: 20px; left: 18%;">INF 7025</div>
+  <div class="flowchart-item" style="top: 280px; left: 2%;">EEL 7020</div>
+  <div class="flowchart-item" style="top: 280px; left: 25%;">EEL 7031</div>
+  <div class="flowchart-item" style="top: 280px; left: 50%;">EEL 7040</div>
+  <div class="flowchart-item" style="top: 280px; left: 75%;">MAT 4225</div>
+  <div class="flowchart-item" style="top: 410px; left: 9%;">EEL 7032</div>
+  <div class="flowchart-item" style="top: 410px; left: 42%;">EEL 7051</div>
+  <div class="flowchart-item" style="top: 410px; left: 75%;">EEL 5105</div>
+  <div class="flowchart-item" style="top: 540px; left: 2%;">EEL 7042</div>
+  <div class="flowchart-item" style="top: 540px; left: 25%;">EEL 7052</div>
+  <div class="flowchart-item" style="top: 540px; left: 50%;">EEL 7062</div>
+  <div class="flowchart-item" style="top: 540px; left: 75%;">EEL 7010</div>
+</a>
+<svg id="flowchart-svg" class="absolute top-0 left-0 w-full h-full" style="z-index: -1;"></svg>
+</div>
+</main>
+</div>
+<script>
+// Lista de conexões entre blocos (nome exato do texto do bloco)
+const connections = [
+  // Topo para segunda linha
+  ['CTC 4002', 'INF 1037'],
+  ['INF 7025', 'INF 1037'],
+  ['MAT 4162', 'INF 1009'],
+  ['MAT 4162', 'ENG 4010'],
+  ['ENG 4010', 'INF 1009'],
+  ['FIS 4001', 'CTC 4001'],
+  ['MAT 4161', 'CTC 4001'],
+
+  // Segunda para terceira linha
+  ['INF 1037', 'EEL 7020'],
+  ['INF 1037', 'EEL 7031'],
+  ['INF 1009', 'EEL 7040'],
+  ['CTC 4001', 'MAT 4225'],
+
+  // Terceira para quarta linha
+  ['EEL 7020', 'EEL 7032'],
+  ['EEL 7031', 'EEL 7051'],
+  ['EEL 7040', 'EEL 7051'],
+  ['MAT 4225', 'EEL 5105'],
+
+  // Quarta para quinta linha
+  ['EEL 7032', 'EEL 7042'],
+  ['EEL 7051', 'EEL 7052'],
+  ['EEL 7051', 'EEL 7062'],
+  ['EEL 5105', 'EEL 7010'],
+];
+
+function getBlockConnectionPoints(el) {
+  const rect = el.getBoundingClientRect();
+  const parentRect = el.offsetParent.getBoundingClientRect();
+  const x = rect.left - parentRect.left;
+  const y = rect.top - parentRect.top;
+  const w = rect.width;
+  const h = rect.height;
+  return {
+    top: { x: x + w/2, y: y },
+    bottom: { x: x + w/2, y: y + h },
+    left: { x: x, y: y + h/2 },
+    right: { x: x + w, y: y + h/2 },
+    center: { x: x + w/2, y: y + h/2 },
+    rect: { x, y, w, h }
+  };
+}
+
+function createOrthogonalConnection(a, b) {
+  const verticalThreshold = 50; // distância vertical mínima para considerar blocos em níveis diferentes
+  
+  // Se os blocos estão aproximadamente no mesmo nível vertical
+  if (Math.abs(a.center.y - b.center.y) < verticalThreshold) {
+    // Conexão horizontal (usando pontos left/right)
+    const isALeftOfB = a.center.x < b.center.x;
+    const start = isALeftOfB ? a.right : a.left;
+    const end = isALeftOfB ? b.left : b.right;
+    return `M ${start.x} ${start.y} L ${end.x} ${end.y}`;
+  }
+  // Se os blocos estão em níveis diferentes
+  else {
+    // Conexão vertical (usando pontos top/bottom)
+    const isAAboveB = a.center.y < b.center.y;
+    const start = isAAboveB ? a.bottom : a.top;
+    const end = isAAboveB ? b.top : b.bottom;
+    const midY = (start.y + end.y) / 2;
+    
+    // Criar path em L
+    return `M ${start.x} ${start.y} L ${start.x} ${midY} L ${end.x} ${midY} L ${end.x} ${end.y}`;
+  }
+}
+
+function drawConnections() {
+  const container = document.getElementById('flowchart');
+  const svg = document.getElementById('flowchart-svg');
+  if (!container || !svg) return;
+  svg.innerHTML = '';
+  
+  const blocks = {};
+  container.querySelectorAll('.flowchart-item').forEach(el => {
+    const text = el.textContent.trim();
+    blocks[text] = el;
+  });
+  
+  const w = container.offsetWidth;
+  const h = container.offsetHeight;
+  svg.setAttribute('width', w);
+  svg.setAttribute('height', h);
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  
+  connections.forEach(([from, to]) => {
+    const a = blocks[from];
+    const b = blocks[to];
+    if (!a || !b) return;
+    
+    const pointsA = getBlockConnectionPoints(a);
+    const pointsB = getBlockConnectionPoints(b);
+    
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', createOrthogonalConnection(pointsA, pointsB));
+    path.setAttribute('stroke', '#000080');
+    path.setAttribute('stroke-width', '2');
+    path.setAttribute('fill', 'none');
+    svg.appendChild(path);
+  });
+}
+window.addEventListener('DOMContentLoaded', drawConnections);
+window.addEventListener('resize', drawConnections);
+</script>
+<footer class="bg-navy text-white">
+<div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+<div class="flex items-center">
+<img alt="LOGO PUC" class="w-20 h-40 pr-2" src="../Recursos de Estilo/logo puc brasão.svg"/>
+<nav class="flex flex-wrap gap-x-10 gap-y-2 font-regular pl-10">
+<a class="hover:underline" href="https://sau.puc-rio.br/WebLoginPucOnline/LayoutLoginPucOnline/PaginasEstaticas/escolhaPerfil.html?ReturnUrl=%2f"target="_blank">SAU</a>
+<a class="hover:underline" href="https://www.ctc.puc-rio.br/"target="_blank">CTC</a>
+<a class="hover:underline" href="https://www.cbctc.puc-rio.br/"target="_blank">CBCTC</a>
+<a class="hover:underline" href="https://microhorario.rdc.puc-rio.br/WebMicroHorarioConsulta/MicroHorarioConsulta.aspx?sessao=U2lzdGVtYT1QVUNPTkxJTkVfQUxVTk8mQXBsaWNhY2FvPU1JQ1JPX0hPUkFSSU8mRnVuY2FvPUNPTlNVTFRBJklEPWIyMTliZWVhNDZiNDRiZWQ4NTU5MDk5MjgyMDBjZWNl"target="_blank">MICRO HORÁRIO</a>
+</nav>
+</div>
+<div class="mt-6 md:mt-0 text-sm font-regular">
+            © 2025. Todos os direitos reservados.
+        </div>
+</footer>
+</div>
+
+<!-- Scripts para gerar PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  (function(){
+    const btn = document.getElementById('download-pdf');
+    const element = document.getElementById('flowchart');
+    if (!btn || !element) return;
+
+    btn.addEventListener('click', async function () {
+      try {
+        // Redesenha conexões
+        if (typeof drawConnections === 'function') drawConnections();
+
+        // Aguarda um momento para garantir que o SVG foi redesenhado
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        // Captura o elemento como imagem
+        const canvas = await html2canvas(element, {
+          scale: 2,
+          logging: false,
+          useCORS: true,
+          backgroundColor: '#ffffff',
+          onclone: function(clonedDoc) {
+            const clonedElement = clonedDoc.getElementById('flowchart');
+            if (clonedElement) {
+              // Força dimensões fixas no clone
+              const rect = element.getBoundingClientRect();
+              clonedElement.style.width = rect.width + 'px';
+              clonedElement.style.height = rect.height + 'px';
+              // Força redesenho no clone
+              if (typeof drawConnections === 'function') drawConnections();
+            }
+          }
+        });
+
+        // Cria PDF em orientação paisagem
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+          orientation: 'landscape',
+          unit: 'px',
+          format: 'a4',
+        });
+
+        // Ajusta dimensões mantendo proporção
+        const imgWidth = pdf.internal.pageSize.getWidth();
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        // Adiciona a imagem ao PDF
+        pdf.addImage(
+          canvas.toDataURL('image/jpeg', 1.0),
+          'JPEG',
+          0,
+          0,
+          imgWidth,
+          imgHeight,
+          undefined,
+          'FAST'
+        );
+
+        // Salva o PDF
+        pdf.save('fluxograma.pdf');
+
+      } catch (e) {
+        console.error('Erro ao gerar PDF:', e);
+        alert('Não foi possível gerar o PDF. Por favor, tente novamente.');
+      }
+    });
+  })();
+</script>
+
+</body></html>

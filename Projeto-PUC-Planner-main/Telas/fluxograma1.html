@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Fluxograma</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="fluxograma1.css">
+<link rel="shortcut icon" href="../Recursos de Estilo/logo puc brasão.svg" type="image/x-icon">
+</head>
+<body class="bg-white text-navy flex flex-col min-h-screen bg-cover bg-center">
+<div class="flex flex-col h-screen">
+<header class="flex justify-between items-center py-4 bg-navy text-white px-8">
+<a href="home page.html">
+  <div class="text-2xl font-superbold">
+    <img src="../Recursos de Estilo/logo_puc_planner_fundoazul.svg" width="200px" style="border-radius: 20px;">
+</div>
+</a>
+<h1 class="text-3xl font-medium" style="margin-left: -200px; padding-left: -200px;">Fluxograma</h1>
+<button class="text-white">
+</button>
+</header>
+<main class="flex-grow px-6 py-16 flex flex-col items-center justify-center text-center bg-cover bg-center" style="background-image: url('../Recursos de Estilo/puc-do-alto-gemini.png');">
+<div class="bg-white bg-opacity-80 p-10 rounded-lg flex flex-col items-center">
+<p class="text-2xl regular max-w-2xl mb-12 text-navy">
+            O objetivo do fluxograma é visualizar, de uma forma mais visual, as dependências entre disciplinas. Para começar, digite o seu curso na barra de pesquisa abaixo.
+        </p>
+<div class="relative w-full max-w-lg">
+<span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-3xl">
+                search
+            </span>
+<input id="course-search" class="w-full pl-14 pr-4 py-4 border-2 border-navy rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-navy" placeholder="Nome do curso" type="text" autocomplete="off"/>
+<div id="suggestions-container" class="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 shadow-lg hidden"></div>
+</div>
+</div>
+</main>
+<footer class="bg-navy text-white">
+<div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+<div class="flex items-center">
+<img alt="LOGO PUC" class="w-20 h-40 pr-2" src="../Recursos de Estilo/logo puc brasão.svg"/>
+<nav class="flex flex-wrap gap-x-10 gap-y-2 font-regular pl-10">
+<a class="hover:underline" href="https://sau.puc-rio.br/WebLoginPucOnline/LayoutLoginPucOnline/PaginasEstaticas/escolhaPerfil.html?ReturnUrl=%2f"target="_blank">SAU</a>
+<a class="hover:underline" href="https://www.ctc.puc-rio.br/"target="_blank">CTC</a>
+<a class="hover:underline" href="https://www.cbctc.puc-rio.br/"target="_blank">CBCTC</a>
+<a class="hover:underline" href="https://microhorario.rdc.puc-rio.br/WebMicroHorarioConsulta/MicroHorarioConsulta.aspx?sessao=U2lzdGVmYT1QVUNPTkxJTkVfQUxVTk8mQXBsaWNhY2FvPU1JQ1JPX0hPUkFSSU8mRnVuY2FvPUNPTlNVTFRBJklEPWIyMTliZWVhNDZiNDRiZWQ4NTU5MDk5MjgyMDBjZWNl"target="_blank">MICRO HORÁRIO</a>
+</nav>
+</div>
+<div class="mt-6 md:mt-0 text-sm font-regular">
+            © 2025. Todos os direitos reservados.
+        </div>
+</div>
+</footer>
+</div>
+<script src="buscaFluxograma.js"></script>
+
+
+</body></html>

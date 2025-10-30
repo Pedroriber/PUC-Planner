@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Grade Horária</title>
+
+  <!-- favicon: use o SVG desejado -->
+  <link rel="icon" href="../Recursos de Estilo/logo puc brasão.svg" type="image/svg+xml">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Rethink Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    .bg-navy { background-color: #030053; }
+    .text-navy { color: #030053; }
+    .slot-occupied { background: #eef2ff; }
+    .class-chip { cursor: grab; }
+    .drop-ok { outline: 2px dashed #16a34a; outline-offset: -4px; }
+    .drop-bad { outline: 2px dashed #dc2626; outline-offset: -4px; }
+
+    /* ---- Correção de proporção dos logos ---- */
+    .logo-puc {
+      height: 48px;            /* controla o tamanho pelo eixo Y */
+      width: auto;             /* evita “puxar” no eixo X */
+      object-fit: contain;     /* preserva proporção interna */
+    }
+
+    @media (min-width: 768px) {
+      .logo-puc { height: 56px; }
+    }
+  </style>
+</head>
+<body class="bg-white text-navy min-h-screen">
+  <div class="flex flex-col min-h-screen">
+
+    <!-- HEADER no estilo PUC Planner -->
+    <header class="bg-navy text-white py-4 px-6 flex items-center justify-between shadow-md">
+      <div class="flex items-center gap-3">
+        <!-- Ajuste: usa .logo-puc (altura fixa, largura auto) -->
+        <img src="../Recursos de Estilo/logo_puc_planner_fundoazul.svg" alt="PUC Planner Logo" class="logo-puc rounded-lg">
+      </div>
+      <h1 class="text-2xl md:text-3xl font-bold text-center flex-1 md:-ml-20">Grade Horária</h1>
+      <div class="flex items-center gap-2">
+        <button id="btnClear" class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-sm">Limpar</button>
+        <button id="btnExport" class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-sm">Exportar</button>
+      </div>
+    </header>
+
+    <main class="container mx-auto px-4 md:px-6 py-6 grid grid-cols-1 md:grid-cols-4 gap-6 flex-1">
+      <aside class="md:col-span-1">
+        <div class="mb-4 relative">
+          <input id="search" type="text" placeholder="Pesquise pela disciplina" class="w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-500">
+          <span class="material-icons absolute left-2 top-1/2 -translate-y-1/2 text-blue-900">search</span>
+        </div>
+        <div class="mb-2 text-xs text-slate-600">Arraste um item para a grade. Cada disciplina ocupa <b>2 horas</b> automaticamente.</div>
+        <ul id="courseList" class="space-y-2 max-h-[52vh] overflow-auto pr-1"></ul>
+      </aside>
+
+      <section class="md:col-span-3 overflow-x-auto">
+        <table id="grid" class="w-full border border-blue-900 text-sm">
+          <thead>
+            <tr class="bg-navy text-white">
+              <th class="p-3 border border-blue-900 text-left">Horário</th>
+              <th class="p-3 border border-blue-900">Segunda</th>
+              <th class="p-3 border border-blue-900">Terça</th>
+              <th class="p-3 border border-blue-900">Quarta</th>
+              <th class="p-3 border border-blue-900">Quinta</th>
+              <th class="p-3 border border-blue-900">Sexta</th>
+            </tr>
+          </thead>
+          <tbody class="text-center"></tbody>
+        </table>
+        <p class="mt-2 text-xs text-slate-600 flex items-center gap-1">
+          <span class="material-icons text-base">info</span>
+          Clique no “×” para remover um bloco. Salva automaticamente no navegador.
+        </p>
+      </section>
+    </main>
+
+    <!-- FOOTER harmonizado PUC Planner -->
+    <footer class="bg-navy text-white">
+      <div class="container mx-auto flex flex-col md:flex-row justify-between items-center px-6 py-6">
+        <div class="flex items-center gap-4 mb-4 md:mb-0">
+          <!-- Ajuste: controla por altura e mantém proporção -->
+          <img src="../Recursos de Estilo/logo puc brasão.svg" alt="PUC Rio" class="h-16 w-auto rounded-lg">
+          <nav class="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+            <a href="https://www.ctc.puc-rio.br/" target="_blank" class="hover:underline">CTC</a>
+            <a href="https://www.cbctc.puc-rio.br/" target="_blank" class="hover:underline">CICLO BÁSICO</a>
+            <a href="https://sau.puc-rio.br/WebLoginPucOnline/Default.aspx?sessao=VmluY3Vsbz1BJlNpc3RMb2dpbj1QVUNPTkxJTkVfQUxVTk8mQXBwTG9naW49TE9HSU4mRnVuY0xvZ2luPUxPR0lOJlNpc3RNZW51PVBVQ09OTElORV9BTFVOTyZBcHBNZW51PU1FTlUmRnVuY21lbnU9TUVOVQ__" target="_blank" class="hover:underline">SAU</a>
+            <a href="https://microhorario.rdc.puc-rio.br/WebMicroHorarioConsulta/MicroHorarioConsulta.aspx" target="_blank" class="hover:underline">MICRO HORÁRIO</a>
+          </nav>
+        </div>
+        <div class="text-xs text-center md:text-right">
+          © 2025. Todos os direitos reservados — PUC Planner.
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ==== JavaScript original intacto ==== -->
+  <script>
+    // (todo o código JS permanece exatamente o mesmo)
+    const palette = ["#2563eb","#16a34a","#db2777","#f59e0b","#7c3aed","#059669","#dc2626","#0ea5e9"];
+    const baseCourses=[{code:"ENG1127",name:"Introdução à Engenharia (Tópicos Especiais)"},{code:"ENG1003",name:"Desenho Técnico I"},{code:"ENG1015",name:"Ciência e Tecnologia dos Materiais"},{code:"FIS1025",name:"Mecânica Newtoniana A"},{code:"FIS1026",name:"Mecânica Newtoniana B"},{code:"FIS1027",name:"Laboratório de Mecânica Newtoniana B"},{code:"FIS1041",name:"Fluidos e Termodinâmica"},{code:"FIS1042",name:"Laboratório de Fluidos e Termodinâmica"},{code:"FIS1051",name:"Eletromagnetismo"},{code:"FIS1052",name:"Laboratório de Eletromagnetismo"},{code:"INF1025",name:"Introdução à Programação"},{code:"MAT1157",name:"Cálculo a uma Variável A"},{code:"MAT1158",name:"Cálculo a uma Variável B"},{code:"MAT1162",name:"Cálculo a Várias Variáveis I"},{code:"MAT1154",name:"Equações Diferenciais e de Diferenças"},{code:"MAT1250",name:"Álgebra Linear A"},{code:"QUI1709",name:"Laboratório de Química Geral"},{code:"QUI1741",name:"Química Geral A"},{code:"QUI1971",name:"Química Geral A (Currículo 2018+)"},{code:"QUI1972",name:"Química Geral B"},{code:"ENG1004",name:"Desenho Técnico II"},{code:"FIS1061",name:"Física Moderna"},{code:"FIS1062",name:"Laboratório de Física Moderna"},{code:"INF1007",name:"Programação II"},{code:"MAT1163",name:"Cálculo a Várias Variáveis II"},{code:"MAT1202",name:"Álgebra Linear II"},{code:"MAT1310",name:"Matemática Discreta"}].map((c,i)=>({...c,color:palette[i%palette.length]}));
+    const HOURS=Array.from({length:10},(_,i)=>7+i),DAYS=["Segunda","Terça","Quarta","Quinta","Sexta"],tbody=document.querySelector("#grid tbody"),state={busy:{},instances:{}};
+    const save=()=>localStorage.setItem("gradeState2h",JSON.stringify(state)),load=()=>{try{const raw=localStorage.getItem("gradeState2h");if(!raw)return;const s=JSON.parse(raw);s&&s.instances&&s.busy&&Object.assign(state,s)}catch(e){console.warn("Falha ao carregar:",e)}};
+    function buildGrid(){tbody.innerHTML="",HOURS.forEach(e=>{const t=document.createElement("tr"),n=document.createElement("th");n.className="p-3 border border-blue-900 text-left font-semibold whitespace-nowrap",n.textContent=`${e}h - ${e+1}h`,t.appendChild(n),DAYS.forEach((n,a)=>{const r=document.createElement("td");r.className="align-top p-2 border border-blue-900 h-16 min-w-32",r.dataset.day=a,r.dataset.hour=e,r.addEventListener("dragover",onDragOver),r.addEventListener("dragleave",onDragLeave),r.addEventListener("drop",onDrop),t.appendChild(r)}),tbody.appendChild(t)})}
+    function buildSidebar(e=baseCourses){const t=document.getElementById("courseList");t.innerHTML="",e.forEach(e=>{const n=document.createElement("li");n.innerHTML=`<div class="class-chip flex items-center justify-between bg-white border rounded-lg p-2 shadow-sm" draggable="true" data-code="${e.code}" data-name="${e.name}" data-color="${e.color}"><div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full" style="background:${e.color}"></span><div><div class="font-semibold text-sm">${e.code}</div><div class="text-xs text-slate-600">${e.name}</div></div></div><span class="material-icons text-slate-500">drag_indicator</span></div>`;const a=n.firstElementChild;a.addEventListener("dragstart",onDragStartFromSidebar),t.appendChild(n)})}
+    let dragPayload=null;function onDragStartFromSidebar(e){const t=e.currentTarget;dragPayload={code:t.dataset.code,name:t.dataset.name,color:t.dataset.color,duration:2},e.dataTransfer.setData("text/plain",JSON.stringify(dragPayload))}
+    function onDragOver(e){e.preventDefault();const t=e.currentTarget,n=canPlace(t,2);t.classList.toggle("drop-ok",n),t.classList.toggle("drop-bad",!n)}function onDragLeave(e){const t=e.currentTarget;t.classList.remove("drop-ok","drop-bad")}
+    function onDrop(e){e.preventDefault();const t=e.currentTarget;t.classList.remove("drop-ok","drop-bad");const n=dragPayload||JSON.parse(e.dataTransfer.getData("text/plain")||"{}");if(!n)return;const a=parseInt(t.dataset.day,10),r=parseInt(t.dataset.hour,10);placeInstance(n,a,r,2)}
+    function canPlace(e,t){const n=parseInt(e.dataset.day,10),a=parseInt(e.dataset.hour,10);for(let e=0;e<t;e++){const t=`${n}-${a+e}`;if(!HOURS.includes(a+e)||state.busy[t])return!1}return!0}
+    function placeInstance(e,t,n,a=2){for(let r=0;r<a;r++){const i=`${t}-${n+r}`;if(!HOURS.includes(n+r))return void toast("Duração excede a grade.");if(state.busy[i])return void toast("Conflito: horário já ocupado.")}const r=`i${Date.now()}${Math.floor(1e3*Math.random())}`,i={id:r,code:e.code,name:e.name,color:e.color,day:t,startHour:n,duration:a};state.instances[r]=i;for(let e=0;e<a;e++){const n=`${t}-${i.startHour+e}`;state.busy[n]=0===e?r:`${r}:cont`}renderInstance(i),save()}
+    function renderInstance(e){for(let t=0;t<e.duration;t++){const n=tbody.querySelector(`td[data-day="${e.day}"][data-hour="${e.startHour+t}"]`);if(n){n.classList.add("slot-occupied");const a=document.createElement("div");a.className="select-none text-white rounded-lg px-2 py-1 shadow flex items-center justify-between",a.style.background=e.color,a.dataset.id=e.id,0===t?(a.innerHTML=`<div class="text-left"><div class="font-semibold leading-tight">${e.code}</div><div class="text-[11px] opacity-90">${e.name}</div><div class="text-[11px] opacity-90">${DAYS[e.day]} · ${e.startHour}h–${e.startHour+e.duration}h</div></div><button class="bg-white/20 px-1.5 py-0.5 rounded" title="Remover" data-act="del"><span class="material-icons text-sm">close</span></button>`,a.querySelector("[data-act=\"del\"]").addEventListener("click",()=>removeInstance(e.id))):a.innerHTML='<div class="w-full text-center text-[11px] opacity-80">continuação</div>',n.appendChild(a)}}}
+    function removeInstance(e){const t=state.instances[e];if(!t)return;for(let n=0;n<t.duration;n++){const a=`${t.day}-${t.startHour+n}`;delete state.busy[a];const r=tbody.querySelector(`td[data-day="${t.day}"][data-hour="${t.startHour+n}"]`);r&&(r.classList.remove("slot-occupied"),r.innerHTML="")}delete state.instances[e],save()}
+    document.getElementById("btnExport").addEventListener("click",()=>{const e=Object.values(state.instances).map(e=>({código:e.code,disciplina:e.name,dia:DAYS[e.day],início:`${e.startHour}:00`,término:`${e.startHour+e.duration}:00`})),t=new Blob([JSON.stringify(e,null,2)],{type:"application/json;charset=utf-8"}),n=URL.createObjectURL(t),a=document.createElement("a");a.href=n,a.download="grade_2h.json",a.click(),URL.revokeObjectURL(n)}),
+    document.getElementById("btnClear").addEventListener("click",()=>{confirm("Deseja limpar toda a grade?")&&(Object.keys(state.instances).forEach(removeInstance),save())}),
+    document.getElementById("search").addEventListener("input",e=>{const t=e.target.value.trim().toLowerCase(),n=baseCourses.filter(e=>`${e.code} ${e.name}`.toLowerCase().includes(t));buildSidebar(n)});
+    let toastTimer;function toast(e){clearTimeout(toastTimer);let t=document.getElementById("toast");t||(t=document.createElement("div"),t.id="toast",t.className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-black text-white px-3 py-2 rounded-lg text-sm shadow-lg",document.body.appendChild(t)),t.textContent=e,t.style.opacity="1",toastTimer=setTimeout(()=>{t.style.opacity="0"},1800)}
+    function renderAll(){tbody.querySelectorAll("td").forEach(e=>{e.classList.remove("slot-occupied"),e.innerHTML=""}),Object.values(state.instances).forEach(renderInstance)}buildGrid(),buildSidebar(),load(),renderAll();
+  </script>
+</body>
+</html>
