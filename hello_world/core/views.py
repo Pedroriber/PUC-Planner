@@ -14,7 +14,6 @@ User = get_user_model()
 
 
 def index(request):
-    """Página inicial antiga (exemplo Django)"""
     context = {
         "title": "Django example",
     }
@@ -23,12 +22,9 @@ def index(request):
 
 @login_required
 def home(request):
-    """Página inicial do PUC Planner - Requer autenticação"""
     return render(request, "home.html")
 
 def login_view(request):
-    """Tela de login"""
-    # Se o usuário já está autenticado, redireciona para home
     if request.user.is_authenticated:
         return redirect("home")
     
@@ -36,24 +32,18 @@ def login_view(request):
         matricula = request.POST.get("matricula", "").strip()
         password = request.POST.get("password", "")
         
-        # Validações básicas
         if not matricula or not password:
             messages.error(request, "Matrícula e senha são obrigatórios!")
             return render(request, "login.html")
         
-        # Tenta autenticar o usuário
         user = authenticate(request, username=matricula, password=password)
         
         if user is not None:
-            # Usuário autenticado com sucesso
             login(request, user)
             messages.success(request, f"Bem-vindo(a), {user.nome_completo}!")
-            
-            # Redireciona para a página solicitada ou para home
             next_url = request.GET.get('next', 'home')
             return redirect(next_url)
         else:
-            # Credenciais inválidas
             messages.error(request, "Matrícula ou senha incorretos!")
             return render(request, "login.html")
     
@@ -61,13 +51,11 @@ def login_view(request):
 
 
 def logout_view(request):
-    """Logout do usuário"""
     logout(request)
     messages.success(request, "Você saiu da sua conta com sucesso!")
     return redirect("login")
 
 def cadastro(request):
-    """Tela de cadastro"""
     if request.method == "POST":
         nome = request.POST.get("nome", "").strip()
         matricula = request.POST.get("matricula", "").strip()
@@ -88,12 +76,10 @@ def cadastro(request):
             messages.error(request, "A senha deve ter no mínimo 6 caracteres!")
             return render(request, "cadastro.html")
         
-        # Validação de email institucional (opcional)
         if not email.endswith('@puc-rio.br') and not email.endswith('@aluno.puc-rio.br'):
             messages.warning(request, "Aviso: Recomendamos usar seu e-mail institucional PUC.")
         
         try:
-            # Cria o usuário
             user = User.objects.create_user(
                 matricula=matricula,
                 email=email,
@@ -105,7 +91,6 @@ def cadastro(request):
             return redirect("login")
             
         except IntegrityError as e:
-            # Verifica qual campo causou o erro de duplicação
             if 'matricula' in str(e).lower():
                 messages.error(request, "Esta matrícula já está cadastrada!")
             elif 'email' in str(e).lower():
@@ -121,7 +106,6 @@ def cadastro(request):
     return render(request, "cadastro.html")
 
 def esqueci_senha(request):
-    """Tela de recuperação de senha - Envia email com link"""
     if request.method == "POST":
         email = request.POST.get("email", "").strip()
         
@@ -177,14 +161,12 @@ Equipe PUC Planner
 
 
 def redefinir_senha(request, uidb64, token):
-    """Página para redefinir a senha usando o token do email"""
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
     
-    # Valida o token
     if user is not None and default_token_generator.check_token(user, token):
         if request.method == "POST":
             nova_senha = request.POST.get("nova_senha", "")
@@ -202,7 +184,6 @@ def redefinir_senha(request, uidb64, token):
                 messages.error(request, "A senha deve ter no mínimo 6 caracteres!")
                 return render(request, "redefinir_senha.html", {"validlink": True})
             
-            # Altera a senha
             user.set_password(nova_senha)
             user.save()
             
@@ -217,20 +198,14 @@ def redefinir_senha(request, uidb64, token):
 
 @login_required
 def consulta_disciplina(request):
-    """Tela de consulta de disciplinas"""
-    # TODO: Buscar disciplinas do banco de dados
     return render(request, "consulta_disciplina.html")
 
 
 @login_required
 def fluxograma(request):
-    """Tela de fluxograma"""
-    # TODO: Implementar lógica de fluxograma por curso
     return render(request, "fluxograma.html")
 
 
 @login_required
 def grade_horaria(request):
-    """Tela de grade horária"""
-    # TODO: Implementar lógica de montagem de grade
     return render(request, "grade_horaria.html")

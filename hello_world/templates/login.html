@@ -10,22 +10,29 @@
     font-family: 'Poppins', sans-serif !important;
   }
   
-  /* Ajustes de cor e centralização */
+  /* Ajustes de cor e logo à esquerda */
   .header-login {
     background-color: #030053 !important;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
-    padding: 20px;
+    justify-content: space-between;
+    padding: 20px 40px;
   }
   
   .header-login .logo {
-    margin-bottom: 10px;
+    flex-shrink: 0;
+  }
+  
+  .header-login .logo img {
+    height: 50px;
+    width: auto;
   }
   
   .header-login .welcome-text {
-    text-align: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     margin: 0;
     font-weight: 600;
   }

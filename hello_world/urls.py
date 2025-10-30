@@ -23,10 +23,7 @@ from django.conf.urls.static import static
 from hello_world.core import views as core_views
 
 urlpatterns = [
-    # Página inicial antiga (exemplo)
     path("exemplo/", core_views.index, name="index"),
-    
-    # Páginas principais do PUC Planner
     path("", core_views.home, name="home"),
     path("login/", core_views.login_view, name="login"),
     path("logout/", core_views.logout_view, name="logout"),
@@ -36,8 +33,6 @@ urlpatterns = [
     path("consulta-disciplina/", core_views.consulta_disciplina, name="consulta_disciplina"),
     path("fluxograma/", core_views.fluxograma, name="fluxograma"),
     path("grade-horaria/", core_views.grade_horaria, name="grade_horaria"),
-    
-    # Admin
     path("admin/", admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
 ]

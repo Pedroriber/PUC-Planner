@@ -3,12 +3,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
-# Custom User Manager
 class CustomUserManager(BaseUserManager):
-	"""Manager customizado para o modelo de usuário."""
 	
 	def create_user(self, matricula, email, password=None, **extra_fields):
-		"""Cria e salva um usuário comum."""
 		if not matricula:
 			raise ValueError('A matrícula é obrigatória')
 		if not email:
@@ -21,7 +18,6 @@ class CustomUserManager(BaseUserManager):
 		return user
 	
 	def create_superuser(self, matricula, email, password=None, **extra_fields):
-		"""Cria e salva um superusuário."""
 		extra_fields.setdefault('is_staff', True)
 		extra_fields.setdefault('is_superuser', True)
 		extra_fields.setdefault('is_active', True)
@@ -34,15 +30,11 @@ class CustomUserManager(BaseUserManager):
 		return self.create_user(matricula, email, password, **extra_fields)
 
 
-# Custom User Model
 class CustomUser(AbstractUser):
-	"""Modelo de usuário customizado para PUC Planner."""
-	username = None  # Remove o campo username padrão
+	username = None
 	matricula = models.CharField('Matrícula', max_length=20, unique=True)
 	email = models.EmailField('Email', unique=True)
 	nome_completo = models.CharField('Nome Completo', max_length=200)
-	
-	# Campos opcionais
 	curso = models.CharField('Curso', max_length=100, blank=True)
 	periodo = models.PositiveSmallIntegerField('Período', null=True, blank=True)
 	data_criacao = models.DateTimeField(auto_now_add=True)
