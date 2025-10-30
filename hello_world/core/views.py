@@ -125,31 +125,20 @@ def esqueci_senha(request):
     if request.method == "POST":
         email = request.POST.get("email", "").strip()
         
-        print(f"[DEBUG] Email recebido: '{email}'")
-        
         if not email:
             messages.error(request, "Por favor, insira um e-mail válido!")
             return render(request, "esqueci_senha.html")
         
         try:
             user = User.objects.get(email=email)
-            print(f"[DEBUG] Usuário encontrado: {user.nome_completo} ({user.email})")
             
-            # Gera token de recuperação
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             
-            print(f"[DEBUG] Token gerado: {token}")
-            print(f"[DEBUG] UID: {uid}")
-            
-            # Cria o link de recuperação
             reset_link = request.build_absolute_uri(
                 f'/redefinir-senha/{uid}/{token}/'
             )
             
-            print(f"[DEBUG] Link de recuperação: {reset_link}")
-            
-            # Prepara o email
             subject = 'Recuperação de Senha - PUC Planner'
             message = f"""
 Olá {user.nome_completo},
@@ -167,9 +156,6 @@ Atenciosamente,
 Equipe PUC Planner
             """
             
-            print(f"[DEBUG] Tentando enviar email para: {user.email}")
-            
-            # Envia o email
             send_mail(
                 subject,
                 message,
@@ -178,18 +164,11 @@ Equipe PUC Planner
                 fail_silently=False,
             )
             
-            print(f"[DEBUG] Email enviado com sucesso!")
-            
-            messages.success(request, "Email de recuperação enviado! Verifique sua caixa de entrada (ou o console do terminal).")
+            messages.success(request, "Email de recuperação enviado! Verifique sua caixa de entrada.")
             
         except User.DoesNotExist:
-            print(f"[DEBUG] Usuário com email '{email}' não encontrado")
-            # Não revela se o email existe ou não por segurança
             messages.success(request, "Se o e-mail estiver cadastrado, você receberá instruções de recuperação!")
         except Exception as e:
-            print(f"[DEBUG] ERRO ao enviar email: {e}")
-            import traceback
-            traceback.print_exc()
             messages.error(request, f"Erro ao enviar email: {str(e)}")
         
         return redirect("login")
