@@ -1,7 +1,7 @@
 
 const courses = [
-    { name: "Engenharia da Computação", file: "fluxograma2.html" },
-    { name: "Engenharia de Produção", file: "fluxograma3.html" }
+    { name: "Engenharia da Computação", url: "/fluxograma2/" },
+    { name: "Engenharia de Produção", url: "/fluxograma3/" }
 ];
 
 const searchInput = document.getElementById("course-search");
@@ -26,7 +26,7 @@ searchInput.addEventListener("input", function() {
             suggestionItem.classList.add("p-3", "cursor-pointer", "hover:bg-gray-100", "text-left");
             suggestionItem.textContent = course.name;
             suggestionItem.addEventListener("click", function() {
-                window.location.href = course.file;
+                window.location.href = course.url;
             });
             suggestionsContainer.appendChild(suggestionItem);
         });

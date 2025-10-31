@@ -207,5 +207,20 @@ def fluxograma(request):
 
 
 @login_required
+def fluxograma1(request):
+    return render(request, "fluxograma1.html")
+
+
+@login_required
+def fluxograma2(request):
+    return render(request, "fluxograma2.html")
+
+
+@login_required
+def fluxograma3(request):
+    return render(request, "fluxograma3.html")
+
+
+@login_required
 def grade_horaria(request):
     return render(request, "grade_horaria.html")
