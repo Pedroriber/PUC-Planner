@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Course, SemesterPlan, Task
+from .models import CustomUser, Course
 
 
 @admin.register(CustomUser)
@@ -35,21 +35,4 @@ class CourseAdmin(admin.ModelAdmin):
 	list_display = ['code', 'name', 'credits']
 	search_fields = ['code', 'name']
 	list_filter = ['credits']
-
-
-@admin.register(SemesterPlan)
-class SemesterPlanAdmin(admin.ModelAdmin):
-	"""Admin para planos semestrais."""
-	list_display = ['user', 'name', 'created_at']
-	list_filter = ['created_at']
-	search_fields = ['user__matricula', 'user__nome_completo', 'name']
-	filter_horizontal = ['courses']
-
-
-@admin.register(Task)
-class TaskAdmin(admin.ModelAdmin):
-	"""Admin para tarefas."""
-	list_display = ['title', 'user', 'related_course', 'due_date', 'completed']
-	list_filter = ['completed', 'due_date', 'related_course']
-	search_fields = ['title', 'description', 'user__matricula', 'user__nome_completo']
 
