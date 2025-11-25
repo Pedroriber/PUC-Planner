@@ -10,8 +10,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.db import IntegrityError
 
-from appPUC_Planner.models import Course, Task
-from appPUC_Planner.forms import CourseForm, TaskForm
+from appPUC_Planner.models import Course
+from appPUC_Planner.forms import CourseForm
 
 User = get_user_model()
 
@@ -233,14 +233,12 @@ def grade_horaria(request):
 
 @login_required
 def course_list(request):
-    """Lista todas as disciplinas."""
     courses = Course.objects.all()
     return render(request, "courses/course_list.html", {"courses": courses})
 
 
 @login_required
 def course_create(request):
-    """Cria uma nova disciplina."""
     if request.method == "POST":
         form = CourseForm(request.POST)
         if form.is_valid():
@@ -255,7 +253,6 @@ def course_create(request):
 
 @login_required
 def course_update(request, pk):
-    """Atualiza uma disciplina."""
     course = get_object_or_404(Course, pk=pk)
     
     if request.method == "POST":
@@ -272,7 +269,6 @@ def course_update(request, pk):
 
 @login_required
 def course_delete(request, pk):
-    """Deleta uma disciplina."""
     course = get_object_or_404(Course, pk=pk)
     
     if request.method == "POST":
@@ -281,59 +277,3 @@ def course_delete(request, pk):
         return redirect("course_list")
     
     return render(request, "courses/course_confirm_delete.html", {"course": course})
-
-
-# ============ CRUD de Tarefas ============
-
-@login_required
-def task_list(request):
-    """Lista tarefas do usuário."""
-    tasks = Task.objects.filter(user=request.user)
-    return render(request, "tasks/task_list.html", {"tasks": tasks})
-
-
-@login_required
-def task_create(request):
-    """Cria uma nova tarefa."""
-    if request.method == "POST":
-        form = TaskForm(request.POST)
-        if form.is_valid():
-            task = form.save(commit=False)
-            task.user = request.user
-            task.save()
-            messages.success(request, "Tarefa criada com sucesso!")
-            return redirect("task_list")
-    else:
-        form = TaskForm()
-    
-    return render(request, "tasks/task_form.html", {"form": form})
-
-
-@login_required
-def task_update(request, pk):
-    """Atualiza uma tarefa."""
-    task = get_object_or_404(Task, pk=pk, user=request.user)
-    
-    if request.method == "POST":
-        form = TaskForm(request.POST, instance=task)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Tarefa atualizada com sucesso!")
-            return redirect("task_list")
-    else:
-        form = TaskForm(instance=task)
-    
-    return render(request, "tasks/task_form.html", {"form": form, "task": task})
-
-
-@login_required
-def task_delete(request, pk):
-    """Deleta uma tarefa."""
-    task = get_object_or_404(Task, pk=pk, user=request.user)
-    
-    if request.method == "POST":
-        task.delete()
-        messages.success(request, "Tarefa deletada com sucesso!")
-        return redirect("task_list")
-    
-    return render(request, "tasks/task_confirm_delete.html", {"task": task})
