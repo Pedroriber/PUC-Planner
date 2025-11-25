@@ -36,6 +36,12 @@ urlpatterns = [
     path("fluxograma2/", core_views.fluxograma2, name="fluxograma2"),
     path("fluxograma3/", core_views.fluxograma3, name="fluxograma3"),
     path("grade-horaria/", core_views.grade_horaria, name="grade_horaria"),
+    
+    path("disciplinas/", core_views.course_list, name="course_list"),
+    path("disciplinas/nova/", core_views.course_create, name="course_create"),
+    path("disciplinas/<int:pk>/editar/", core_views.course_update, name="course_update"),
+    path("disciplinas/<int:pk>/deletar/", core_views.course_delete, name="course_delete"),
+    
     path("admin/", admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
 ]

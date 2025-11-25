@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
@@ -9,6 +9,9 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db import IntegrityError
+
+from appPUC_Planner.models import Course
+from appPUC_Planner.forms import CourseForm
 
 User = get_user_model()
 
@@ -224,3 +227,53 @@ def fluxograma3(request):
 @login_required
 def grade_horaria(request):
     return render(request, "grade_horaria.html")
+
+
+# ============ CRUD de Disciplinas ============
+
+@login_required
+def course_list(request):
+    courses = Course.objects.all()
+    return render(request, "courses/course_list.html", {"courses": courses})
+
+
+@login_required
+def course_create(request):
+    if request.method == "POST":
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Disciplina criada com sucesso!")
+            return redirect("course_list")
+    else:
+        form = CourseForm()
+    
+    return render(request, "courses/course_form.html", {"form": form})
+
+
+@login_required
+def course_update(request, pk):
+    course = get_object_or_404(Course, pk=pk)
+    
+    if request.method == "POST":
+        form = CourseForm(request.POST, instance=course)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Disciplina atualizada com sucesso!")
+            return redirect("course_list")
+    else:
+        form = CourseForm(instance=course)
+    
+    return render(request, "courses/course_form.html", {"form": form, "course": course})
+
+
+@login_required
+def course_delete(request, pk):
+    course = get_object_or_404(Course, pk=pk)
+    
+    if request.method == "POST":
+        course.delete()
+        messages.success(request, "Disciplina deletada com sucesso!")
+        return redirect("course_list")
+    
+    return render(request, "courses/course_confirm_delete.html", {"course": course})

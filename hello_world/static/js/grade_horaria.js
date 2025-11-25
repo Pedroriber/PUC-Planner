@@ -219,23 +219,18 @@ function renderInstance(instance) {
     block.style.background = instance.color;
     block.dataset.id = instance.id;
     
-    if (i === 0) {
-      // Primeiro bloco: mostra informações completas
-      block.innerHTML = `
-        <div class="text-left">
-          <div class="font-semibold leading-tight">${instance.code}</div>
-          <div class="text-[11px] opacity-90">${instance.name}</div>
-          <div class="text-[11px] opacity-90">${DAYS[instance.day]} · ${instance.startHour}h–${instance.startHour + instance.duration}h</div>
-        </div>
-        <button class="bg-white/20 px-1.5 py-0.5 rounded" title="Remover" data-act="del">
-          <span class="material-icons text-sm">close</span>
-        </button>
-      `;
-      block.querySelector("[data-act=\"del\"]").addEventListener("click", () => removeInstance(instance.id));
-    } else {
-      // Blocos subsequentes: continuação
-      block.innerHTML = '<div class="w-full text-center text-[11px] opacity-80">continuação</div>';
-    }
+    // Todos os blocos mostram as informações completas
+    block.innerHTML = `
+      <div class="text-left">
+        <div class="font-semibold leading-tight">${instance.code}</div>
+        <div class="text-[11px] opacity-90">${instance.name}</div>
+        <div class="text-[11px] opacity-90">${DAYS[instance.day]} · ${instance.startHour}h–${instance.startHour + instance.duration}h</div>
+      </div>
+      <button class="bg-white/20 px-1.5 py-0.5 rounded" title="Remover" data-act="del">
+        <span class="material-icons text-sm">close</span>
+      </button>
+    `;
+    block.querySelector("[data-act=\"del\"]").addEventListener("click", () => removeInstance(instance.id));
     
     cell.appendChild(block);
   }

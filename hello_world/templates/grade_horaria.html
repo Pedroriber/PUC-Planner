@@ -27,13 +27,13 @@
 {% block content %}
 <body class="bg-white text-navy flex flex-col min-h-screen">
 <div class="flex flex-col h-screen">
-    <header class="flex justify-between items-center py-4 bg-navy text-white px-8 shadow-md">
+    <header class="flex items-center py-4 bg-navy text-white px-8 shadow-md">
         <a href="{% url 'home' %}">
             <div class="text-2xl font-superbold">
                 <img src="{% static 'images/logo_puc_planner_fundoazul.svg' %}" width="200px" style="border-radius: 20px;" class="logo-puc">
             </div>
         </a>
-        <h1 class="text-3xl font-superbold" style="margin-left: -200px; padding-left: -200px;">Grade Horária</h1>
+        <h1 class="text-3xl font-superbold flex-1 text-center">Grade Horária</h1>
         <div class="flex items-center gap-2">
             <button id="btnClear" class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-sm">Limpar</button>
             <button id="btnExport" class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-sm">Exportar</button>
@@ -81,5 +81,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/grade_horaria.js' %}"></script>
+<script src="{% static 'js/grade_horaria.js' %}?v=2"></script>
 {% endblock %}
