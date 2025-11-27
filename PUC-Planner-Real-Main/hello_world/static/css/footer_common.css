@@ -1,0 +1,113 @@
+/* ========================================
+   ESTILOS PADRÃO DO RODAPÉ - PUC PLANNER
+   ======================================== */
+
+:root {
+    --azul-puc: #030053;
+    --cor-texto-footer: #ffffff;
+}
+
+.rodape {
+    background-color: var(--azul-puc);
+    color: var(--cor-texto-footer);
+    padding: 20px 0;
+    margin-top: auto;
+    width: 100%;
+}
+
+.rodape-conteudo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    min-height: 80px;
+    gap: 20px;
+}
+
+.rodape-logo {
+    flex-shrink: 0;
+}
+
+.rodape-logo img {
+    height: 100px;
+    width: auto;
+}
+
+.rodape-links-container {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.rodape-links-container a {
+    color: var(--cor-texto-footer);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+}
+
+.rodape-links-container a:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+.rodape-links-container span {
+    color: var(--cor-texto-footer);
+    opacity: 0.5;
+}
+
+.rodape-copyright {
+    flex-shrink: 0;
+    text-align: right;
+}
+
+.rodape-copyright .copyright {
+    font-size: 12px;
+    margin: 0;
+    color: var(--cor-texto-footer);
+    opacity: 0.8;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .rodape-conteudo {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .rodape-logo img {
+        height: 80px;
+    }
+    
+    .rodape-links-container {
+        flex-direction: row;
+        justify-content: center;
+        gap: 10px;
+        font-size: 13px;
+    }
+    
+    .rodape-copyright {
+        text-align: center;
+    }
+    
+    .rodape-copyright .copyright {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .rodape-links-container {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .rodape-links-container span {
+        display: none;
+    }
+}

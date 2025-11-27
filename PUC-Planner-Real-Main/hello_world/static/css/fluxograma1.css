@@ -1,0 +1,27 @@
+body {
+            font-family: 'Rethink Sans', sans-serif;
+            font-weight: 400;}
+        .superbold {
+            font-weight: 700;
+        }
+        .regular {
+            font-weight: 400;
+        }
+        .bg-navy {
+            background-color: #030053;
+        }
+        .text-navy {
+            color: #030053;
+        }
+        .border-navy {
+            border-color: #030053;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Rethink Sans', sans-serif;
+            font-weight: 700;}
+        .font-regular {
+             font-family: 'Rethink Sans', sans-serif;
+            font-weight: 400;}
+        .font-bold {
+             font-family: 'Rethink Sans', sans-serif;
+            font-weight: 700;}
