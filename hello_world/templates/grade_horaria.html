@@ -81,5 +81,8 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/grade_horaria.js' %}?v=2"></script>
+<script>
+    window.coursesFromDB = {{ courses_json|safe }};
+</script>
+<script src="{% static 'js/grade_horaria.js' %}?v=4"></script>
 {% endblock %}
