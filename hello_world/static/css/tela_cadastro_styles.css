@@ -1,0 +1,229 @@
+:root {
+    --cor-institucional-azul: #030053;
+    --cor-destaque-amarelo: #ffae00;
+    --cor-fundo: #f8f8f8;
+    --cor-texto-escuro: #333;
+    --cor-borda-input: #ccc;
+    --cor-sombra: rgba(0, 0, 0, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Rethink Sans', sans-serif;
+}
+
+body {
+    background-color: var(--cor-fundo);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.cabecalho {
+    background-color: var(--cor-institucional-azul);
+    color: white;
+    padding: 15px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px var(--cor-sombra);
+}
+
+.logo img {
+    height: 50px;
+    width: auto;
+}
+
+.titulo-pagina {
+    font-size: 20px;
+    font-weight: 550;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.espacador {
+    width: 150px; 
+}
+
+.conteudo-principal {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    background: url('testefundosetas.png');
+    background-size: 1000px 1000px;
+}
+
+.cadastro-container {
+    background-color: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 6px 15px var(--cor-sombra);
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+}
+
+.titulo-formulario {
+    color: var(--cor-institucional-azul);
+    margin-bottom: 30px;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.row .half-width {
+    width: calc(50% - 7.5px);
+    margin-bottom: 0;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--cor-borda-input);
+    border-radius: 5px;
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-group:focus-within {
+    border-color: var(--cor-destaque-amarelo);
+    box-shadow: 0 0 0 1px var(--cor-destaque-amarelo);
+}
+
+.icon {
+    color: var(--cor-institucional-azul);
+    margin-right: 15px;
+    font-size: 16px;
+    width: 18px;
+    text-align: center;
+}
+
+.formulario input {
+    border: none;
+    outline: none;
+    font-size: 14px;
+    padding: 1px 0;
+    color: var(--cor-texto-escuro);
+}
+
+.formulario input::placeholder {
+    color: #999;
+}
+
+.botao-cadastro {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--cor-destaque-amarelo);
+    color: var(--cor-institucional-azul);
+    border: none;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: 740;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.botao-cadastro:hover {
+    background-color: #e3a000;
+}
+
+.login-link {
+    margin-top: 20px;
+    font-size: 14px;
+    color: var(--cor-texto-escuro);
+}
+
+.login-link a {
+    color: var(--cor-institucional-azul);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+.rodape {
+    background-color: var(--cor-institucional-azul);
+    color: white;
+    padding: 20px 0;
+    margin-top: auto
+}
+
+.rodape-conteudo {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    
+    min-height: 80px;
+}
+
+.rodape-logo img {
+    height: 100px;
+    width: auto;
+    display: block;
+}
+
+.rodape-links-container {
+    display: flex;
+    gap: 10px;
+}
+
+.rodape-links-container a {
+    color: white;
+    text-decoration: none;
+    font-size: 0.9em;
+    padding: 0 5px;
+    white-space: nowrap;
+}
+
+.rodape-links-container a:hover {
+    color: #ffae00;
+}
+
+.rodape-links-container span {
+    color: white;
+}
+
+.rodape-copyright .copyright {
+    font-size: 0.8em;
+    color: white;
+    margin: 0;
+    text-align: right;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .rodape-conteudo {
+        flex-direction: column; 
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        gap: 15px;
+    }
+
+    .rodape-links-container {
+        flex-wrap: wrap; 
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .rodape-copyright .copyright {
+        text-align: center;
+    }
+}
