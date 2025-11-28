@@ -2,36 +2,11 @@
 // Paleta de cores para disciplinas
 const palette = ["#2563eb","#16a34a","#db2777","#f59e0b","#7c3aed","#059669","#dc2626","#0ea5e9"];
 
-// Base de disciplinas do ciclo básico
-const baseCourses = [
-  {code:"ENG1127",name:"Introdução à Engenharia (Tópicos Especiais)"},
-  {code:"ENG1003",name:"Desenho Técnico I"},
-  {code:"ENG1015",name:"Ciência e Tecnologia dos Materiais"},
-  {code:"FIS1025",name:"Mecânica Newtoniana A"},
-  {code:"FIS1026",name:"Mecânica Newtoniana B"},
-  {code:"FIS1027",name:"Laboratório de Mecânica Newtoniana B"},
-  {code:"FIS1041",name:"Fluidos e Termodinâmica"},
-  {code:"FIS1042",name:"Laboratório de Fluidos e Termodinâmica"},
-  {code:"FIS1051",name:"Eletromagnetismo"},
-  {code:"FIS1052",name:"Laboratório de Eletromagnetismo"},
-  {code:"INF1025",name:"Introdução à Programação"},
-  {code:"MAT1157",name:"Cálculo a uma Variável A"},
-  {code:"MAT1158",name:"Cálculo a uma Variável B"},
-  {code:"MAT1162",name:"Cálculo a Várias Variáveis I"},
-  {code:"MAT1154",name:"Equações Diferenciais e de Diferenças"},
-  {code:"MAT1250",name:"Álgebra Linear A"},
-  {code:"QUI1709",name:"Laboratório de Química Geral"},
-  {code:"QUI1741",name:"Química Geral A"},
-  {code:"QUI1971",name:"Química Geral A (Currículo 2018+)"},
-  {code:"QUI1972",name:"Química Geral B"},
-  {code:"ENG1004",name:"Desenho Técnico II"},
-  {code:"FIS1061",name:"Física Moderna"},
-  {code:"FIS1062",name:"Laboratório de Física Moderna"},
-  {code:"INF1007",name:"Programação II"},
-  {code:"MAT1163",name:"Cálculo a Várias Variáveis II"},
-  {code:"MAT1202",name:"Álgebra Linear II"},
-  {code:"MAT1310",name:"Matemática Discreta"}
-].map((c, i) => ({...c, color: palette[i % palette.length]}));
+// Carregar disciplinas do banco de dados (passadas pelo template)
+const baseCourses = (window.coursesFromDB || []).map((c, i) => ({
+  ...c,
+  color: palette[i % palette.length]
+}));
 
 // Configuração da grade
 const HOURS = Array.from({length: 10}, (_, i) => 7 + i); // 7h até 16h

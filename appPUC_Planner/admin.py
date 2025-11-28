@@ -40,3 +40,4 @@ class CourseAdmin(admin.ModelAdmin):
 		('Layout do Fluxograma', {'fields': ('pos_top_px', 'pos_left_pct', 'prerequisites')}),
 	)
 
+

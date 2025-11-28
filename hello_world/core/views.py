@@ -9,6 +9,7 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db import IntegrityError
+import json
 
 from appPUC_Planner.models import Course
 from appPUC_Planner.forms import CourseForm
@@ -251,7 +252,13 @@ def fluxograma3(request):
 
 @login_required
 def grade_horaria(request):
-    return render(request, "grade_horaria.html")
+    courses = Course.objects.all()
+    courses_json = json.dumps([{
+        'code': c.code,
+        'name': c.name,
+        'credits': c.credits
+    } for c in courses])
+    return render(request, "grade_horaria.html", {'courses_json': courses_json})
 
 
 # ============ CRUD de Disciplinas ============
