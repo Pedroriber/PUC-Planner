@@ -32,6 +32,8 @@ urlpatterns = [
     path("redefinir-senha/<uidb64>/<token>/", core_views.redefinir_senha, name="redefinir_senha"),
     path("consulta-disciplina/", core_views.consulta_disciplina, name="consulta_disciplina"),
     path("fluxograma/", core_views.fluxograma, name="fluxograma"),
+    # Generic fluxograma by program (ex: /fluxograma/Engenharia%20de%20Computacao/)
+    path("fluxograma/<str:program>/", core_views.fluxograma_course, name="fluxograma_course"),
     path("fluxograma1/", core_views.fluxograma1, name="fluxograma1"),
     path("fluxograma2/", core_views.fluxograma2, name="fluxograma2"),
     path("fluxograma3/", core_views.fluxograma3, name="fluxograma3"),

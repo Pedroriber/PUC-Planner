@@ -32,6 +32,25 @@
                 <input id="course-search" class="w-full pl-14 pr-4 py-4 border-2 border-navy rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-navy" placeholder="Nome do curso" type="text" autocomplete="off"/>
                 <div id="suggestions-container" class="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 shadow-lg hidden"></div>
             </div>
+            {% if program %}
+            <div class="mt-8 text-center">
+                <h2 class="text-2xl font-semibold text-navy">Curso: {{ program }}</h2>
+            </div>
+            {% endif %}
+
+            {% if courses %}
+            <div class="mt-6 w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+                {% for c in courses %}
+                <div class="p-4 border rounded shadow-sm bg-white">
+                    <div class="text-sm text-gray-600">{{ c.code }}</div>
+                    <div class="text-lg font-medium text-navy">{{ c.name }}</div>
+                    <div class="text-sm text-gray-500">Créditos: {{ c.credits }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% elif program %}
+            <div class="mt-6 text-center text-gray-600">Nenhuma disciplina encontrada para "{{ program }}".</div>
+            {% endif %}
         </div>
     </main>
 

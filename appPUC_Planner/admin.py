@@ -32,7 +32,11 @@ class CustomUserAdmin(UserAdmin):
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
 	"""Admin para disciplinas."""
-	list_display = ['code', 'name', 'credits']
-	search_fields = ['code', 'name']
-	list_filter = ['credits']
+	list_display = ['code', 'name', 'credits', 'program']
+	search_fields = ['code', 'name', 'program']
+	list_filter = ['credits', 'program']
+	fieldsets = (
+		(None, {'fields': ('code', 'name', 'credits', 'program')}),
+		('Layout do Fluxograma', {'fields': ('pos_top_px', 'pos_left_pct', 'prerequisites')}),
+	)
 

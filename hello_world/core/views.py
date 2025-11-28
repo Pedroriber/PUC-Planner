@@ -210,6 +210,31 @@ def fluxograma(request):
 
 
 @login_required
+def fluxograma_course(request, program):
+    """Generic view to display the fluxograma for a given program/curso.
+
+    - `program` is matched against `Course.program` (case-insensitive).
+    - The template `fluxograma.html` will receive `program` and `courses` in context.
+    """
+    # Prefer exact (case-insensitive) match, fallback to contains for broader matches
+    courses = list(Course.objects.filter(program__iexact=program).order_by('code'))
+    if not courses:
+        courses = list(Course.objects.filter(program__icontains=program).order_by('code'))
+
+    # Build connections from prerequisites field (comma separated codes)
+    connections = []
+    for c in courses:
+        if c.prerequisites:
+            parts = [p.strip() for p in c.prerequisites.split(',') if p.strip()]
+            for p in parts:
+                # connection from prereq p to this course code
+                connections.append([p, c.code])
+
+    # Pass courses and connections to a dedicated template that renders the flowchart
+    return render(request, "fluxograma_program.html", {"program": program, "courses": courses, "connections": connections})
+
+
+@login_required
 def fluxograma1(request):
     return render(request, "fluxograma1.html")
 

@@ -67,6 +67,17 @@ class Course(models.Model):
 	"""Disciplina mínima: código, nome e créditos."""
 	code = models.CharField("código", max_length=20, unique=True)
 	name = models.CharField("nome", max_length=200)
+	# Programa/curso ao qual a disciplina pertence (ex: 'Engenharia de Computação')
+	# Usado pela view de fluxograma para filtrar disciplinas por curso.
+	program = models.CharField("curso", max_length=200, blank=True, db_index=True)
+	# Posição para renderização visual do fluxograma
+	pos_top_px = models.PositiveIntegerField("pos_top_px", null=True, blank=True,
+											help_text="Posição top em pixels usada pelo layout do fluxograma")
+	pos_left_pct = models.FloatField("pos_left_pct", null=True, blank=True,
+									 help_text="Posição left em porcentagem (0-100) usada pelo layout do fluxograma")
+	# Pré-requisitos: lista de códigos separados por vírgula (ex: 'MAT 4162, ENG 4010')
+	prerequisites = models.CharField("pré-requisitos", max_length=500, blank=True,
+									 help_text="Códigos separados por vírgula, ex: 'MAT 4162, ENG 4010'")
 	credits = models.PositiveSmallIntegerField("créditos", default=0)
 
 	class Meta:
