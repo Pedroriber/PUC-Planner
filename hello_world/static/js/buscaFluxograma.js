@@ -1,9 +1,7 @@
 
-// Cursos disponíveis para fluxograma dinâmico
-// O URL será gerado dinamicamente como /fluxograma/<program>/
 const courses = [
-    { name: "Engenharia de Computação" },
-    { name: "Engenharia de Produção" }
+    { name: "Engenharia da Computação", url: "/fluxograma2/" },
+    { name: "Engenharia de Produção", url: "/fluxograma3/" }
 ];
 
 const searchInput = document.getElementById("course-search");
@@ -28,9 +26,7 @@ searchInput.addEventListener("input", function() {
             suggestionItem.classList.add("p-3", "cursor-pointer", "hover:bg-gray-100", "text-left");
             suggestionItem.textContent = course.name;
             suggestionItem.addEventListener("click", function() {
-                // Redireciona para a URL dinâmica /fluxograma/<program>/
-                const programUrl = "/fluxograma/" + encodeURIComponent(course.name) + "/";
-                window.location.href = programUrl;
+                window.location.href = course.url;
             });
             suggestionsContainer.appendChild(suggestionItem);
         });

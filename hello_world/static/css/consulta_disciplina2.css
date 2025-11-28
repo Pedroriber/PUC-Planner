@@ -12,3 +12,15 @@
             font-weight: 700;}
         .bg-navy {
             background-color: #030053;}
+/* Rótulo à esquerda de cada linha (período) */
+.period-label {
+    position: absolute;
+    left: 0;
+    transform: translateX(-110%); /* empurra o texto pra fora, à esquerda dos blocos */
+    padding: 4px 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #00005f;
+    text-align: right;
+    white-space: nowrap;
+}

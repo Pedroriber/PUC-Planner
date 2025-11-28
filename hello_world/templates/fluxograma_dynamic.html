@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Fluxograma - {{ course_name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/fluxograma2.css' %}">
+<style>
+    /* Rótulo dos períodos */
+    .period-label {
+        position: absolute;
+        font-size: 20px;
+        font-weight: 700;
+        color: #00005F;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bg-white text-navy flex flex-col min-h-screen">
+
+  <!-- HEADER -->
+  <header class="flex justify-between items-center py-4 bg-navy text-white px-8">
+    <a href="{% url 'home' %}">
+      <div class="text-2xl font-superbold">
+        <img src="{% static 'images/logo_puc_planner_fundoazul.svg' %}" width="200" style="border-radius:20px;">
+      </div>
+    </a>
+    <h1 class="text-3xl font-superbold flex-1 text-center">Fluxograma</h1>
+    <div style="width:200px" class="flex items-center justify-end">
+      <button id="download-pdf" class="bg-white text-blue-900 font-bold py-2 px-4 rounded shadow hover:opacity-90 flex items-center">
+        <span class="material-icons mr-2" aria-hidden="true" style="font-size:20px">download</span>
+        Baixar PDF
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="container mx-auto px-4 max-w-6xl py-8">
+    <h2 class="text-center text-2xl superbold mb-12 text-blue-900">
+      Curso: {{ course_name }}
+    </h2>
+
+    <div id="flowchart" class="relative w-full bg-white" style="height: 650px;">
+
+      <!-- ========================= -->
+      <!-- RÓTULOS DOS PERÍODOS -->
+      <!-- ========================= -->
+      {% for p in periods %}
+        <div class="period-label"
+             style="top: {{ p.flow_row }}px;
+                    left: {{ p.flow_col_percent }}%;">
+            {{ p.name }}
+        </div>
+      {% endfor %}
+
+      <!-- ========================= -->
+      <!-- BLOCOS DAS DISCIPLINAS -->
+      <!-- ========================= -->
+      {% for course in courses %}
+        <a href="{{ course.syllabus_url }}" target="_blank">
+          <div
+            class="flowchart-item"
+            style="top: {{ course.flow_row|default_if_none:0 }}px;
+                   left: {{ course.flow_col_percent|default_if_none:0 }}%;">
+            {{ course.code }}
+          </div>
+        </a>
+      {% endfor %}
+
+    </div>
+  </main>
+
+  {% include 'includes/footer.html' %}
+</div>
+
+<script>
+  function adjustContainerHeight() {
+    const container = document.getElementById('flowchart');
+    if (!container) return;
+
+    const parentRect = container.getBoundingClientRect();
+    let maxBottom = 0;
+
+    container.querySelectorAll('.flowchart-item').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      const bottom = rect.bottom - parentRect.top;
+      if (bottom > maxBottom) maxBottom = bottom;
+    });
+
+    if (maxBottom > 0) {
+      container.style.height = (maxBottom + 40) + 'px';
+    }
+  }
+
+  function initFlowchart() {
+    adjustContainerHeight();
+  }
+
+  window.addEventListener('DOMContentLoaded', initFlowchart);
+  window.addEventListener('resize', initFlowchart);
+</script>
+{% endblock %}

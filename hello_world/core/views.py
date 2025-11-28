@@ -10,8 +10,11 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.db import IntegrityError
 
-from appPUC_Planner.models import Course
+from appPUC_Planner.models import Course, CourseRelation, Period
 from appPUC_Planner.forms import CourseForm
+import json
+User = get_user_model()
+
 
 User = get_user_model()
 
@@ -210,41 +213,33 @@ def fluxograma(request):
 
 
 @login_required
-def fluxograma_course(request, program):
-    """Generic view to display the fluxograma for a given program/curso.
-
-    - `program` is matched against `Course.program` (case-insensitive).
-    - The template `fluxograma.html` will receive `program` and `courses` in context.
-    """
-    # Prefer exact (case-insensitive) match, fallback to contains for broader matches
-    courses = list(Course.objects.filter(program__iexact=program).order_by('code'))
-    if not courses:
-        courses = list(Course.objects.filter(program__icontains=program).order_by('code'))
-
-    # Build connections from prerequisites field (comma separated codes)
-    connections = []
-    for c in courses:
-        if c.prerequisites:
-            parts = [p.strip() for p in c.prerequisites.split(',') if p.strip()]
-            for p in parts:
-                # connection from prereq p to this course code
-                connections.append([p, c.code])
-
-    # Pass courses and connections to a dedicated template that renders the flowchart
-    return render(request, "fluxograma_program.html", {"program": program, "courses": courses, "connections": connections})
-
-
-@login_required
 def fluxograma1(request):
     return render(request, "fluxograma1.html")
 
 
+
+
+
+
+
+
 @login_required
 def fluxograma2(request):
-    return render(request, "fluxograma2.html")
+    # Todas as disciplinas, na posição do fluxograma
+    courses = Course.objects.all().order_by("flow_row", "code")
+
+    # Todos os períodos, com posição própria
+    periods = Period.objects.all().order_by("order")
+
+    context = {
+        "course_name": "Engenharia de Computação",
+        "courses": courses,
+        "periods": periods,
+    }
+
+    return render(request, "fluxograma_dynamic.html", context)
 
 
-@login_required
 def fluxograma3(request):
     return render(request, "fluxograma3.html")
 
