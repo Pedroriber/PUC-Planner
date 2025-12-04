@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import Http404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
@@ -11,7 +12,9 @@ from django.conf import settings
 from django.db import IntegrityError
 import json
 
-from appPUC_Planner.models import Course
+from django.utils.text import slugify
+
+from appPUC_Planner.models import Course, Curso, CursoDisciplina
 from appPUC_Planner.forms import CourseForm
 
 User = get_user_model()
@@ -212,27 +215,85 @@ def fluxograma(request):
 
 @login_required
 def fluxograma_course(request, program):
-    """Generic view to display the fluxograma for a given program/curso.
+    """Renderiza o fluxograma dinâmico para um curso usando o relacionamento CursoDisciplina."""
 
-    - `program` is matched against `Course.program` (case-insensitive).
-    - The template `fluxograma.html` will receive `program` and `courses` in context.
-    """
-    # Prefer exact (case-insensitive) match, fallback to contains for broader matches
-    courses = list(Course.objects.filter(program__iexact=program).order_by('code'))
-    if not courses:
-        courses = list(Course.objects.filter(program__icontains=program).order_by('code'))
+    normalized = program.strip()
+    curso = Curso.objects.filter(nome__iexact=normalized).first()
+    if not curso:
+        curso = Curso.objects.filter(nome__icontains=normalized).first()
+    if not curso:
+        slug_target = slugify(normalized)
+        curso = next((c for c in Curso.objects.all() if slugify(c.nome) == slug_target), None)
+    if not curso:
+        raise Http404("Curso não encontrado para o fluxograma solicitado.")
 
-    # Build connections from prerequisites field (comma separated codes)
+    relacoes = (
+        CursoDisciplina.objects
+        .select_related('disciplina')
+        .filter(curso=curso)
+        .order_by('periodo', 'posicao', 'disciplina__code')
+    )
+
+    # Constantes simples para converter período/posição em coordenadas.
+    base_top = 20
+    vertical_gap = 130
+    max_columns = 8  # manter alinhado ao admin e validação
+    horizontal_margin = 5  # margem à esquerda em %
+    column_step = 100 / (max_columns + 1)
+
+    courses = []
+    for rel in relacoes:
+        course = rel.disciplina
+
+        pos_top_px = None
+        if rel.periodo:
+            pos_top_px = base_top + (rel.periodo - 1) * vertical_gap
+
+        pos_left_pct = None
+        if rel.posicao:
+            pos_left_pct = horizontal_margin + (rel.posicao - 1) * column_step
+
+        courses.append({
+            "code": course.code,
+            "name": course.name,
+            "pos_top_px": pos_top_px,
+            "pos_left_pct": pos_left_pct,
+            "syllabus_url": course.syllabus_url or "#",
+        })
+
+    # Conexões continuam baseadas nos pré-requisitos das disciplinas do curso.
     connections = []
-    for c in courses:
-        if c.prerequisites:
-            parts = [p.strip() for p in c.prerequisites.split(',') if p.strip()]
-            for p in parts:
-                # connection from prereq p to this course code
-                connections.append([p, c.code])
+    for rel in relacoes:
+        course = rel.disciplina
+        if course.prerequisites:
+            parts = [p.strip() for p in course.prerequisites.split(',') if p.strip()]
+            for prereq in parts:
+                connections.append([prereq, course.code])
 
-    # Pass courses and connections to a dedicated template that renders the flowchart
-    return render(request, "fluxograma_program.html", {"program": program, "courses": courses, "connections": connections})
+    total_periods = curso.periodos or 0
+    if not total_periods:
+        rel_periods = [rel.periodo for rel in relacoes if rel.periodo]
+        total_periods = max(rel_periods) if rel_periods else 8
+
+    period_labels = list(range(1, total_periods + 1))
+
+    period_markers = []
+    for idx, period in enumerate(period_labels, start=1):
+        marker_top = base_top + (idx - 1) * vertical_gap
+        period_markers.append({"period": period, "top": marker_top})
+
+    flowchart_height = base_top + (total_periods * vertical_gap)
+
+    context = {
+        "program": curso.nome,
+        "courses": courses,
+        "connections": connections,
+        "period_labels": period_labels,
+        "period_markers": period_markers,
+        "flowchart_height": flowchart_height,
+    }
+
+    return render(request, "fluxograma_program.html", context)
 
 
 @login_required
