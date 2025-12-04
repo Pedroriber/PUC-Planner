@@ -237,7 +237,7 @@ def fluxograma_course(request, program):
     # Constantes para converter período/posição em coordenadas.
     base_top = 20
     vertical_gap = 150  # mais espaço vertical entre períodos
-    horizontal_margin = 5  # margem lateral
+    horizontal_margin = 2  # margem lateral mantendo fluxo centralizado
 
     max_used_column = 1
     for rel in relacoes:
@@ -245,9 +245,20 @@ def fluxograma_course(request, program):
             max_used_column = rel.posicao
 
     usable_width = max(10.0, 100 - (horizontal_margin * 2))
-    columns_span = max(max_used_column - 1, 1)
-    spacing_factor = 0.75  # aproxima blocos horizontalmente
-    column_step = (usable_width * spacing_factor) / columns_span if columns_span else 0
+    max_slots = 8  # garante no máximo oito blocos por linha
+    slot_divisor = max(max_slots - 1, 1)
+    base_step = usable_width / slot_divisor if slot_divisor else usable_width
+    effective_columns = min(max_used_column, max_slots)
+    spacing_factor = 1.15  # aumenta levemente a distância entre disciplinas no mesmo período
+    adjusted_step = base_step * spacing_factor
+    if effective_columns > 1:
+        max_span = adjusted_step * (effective_columns - 1)
+        if max_span > usable_width:
+            adjusted_step = usable_width / (effective_columns - 1)
+    else:
+        adjusted_step = base_step
+
+    left_start = horizontal_margin + 4  # aproxima dos rótulos de período mantendo respiro
 
     courses = []
     course_codes = set()
@@ -261,10 +272,12 @@ def fluxograma_course(request, program):
 
         pos_left_pct = None
         if rel.posicao:
-            if max_used_column == 1:
-                pos_left_pct = 50
-            else:
-                pos_left_pct = horizontal_margin + (rel.posicao - 1) * column_step
+            column_index = int(rel.posicao)
+        else:
+            column_index = 1
+
+        column_index = max(1, min(column_index, max_slots))
+        pos_left_pct = left_start + (column_index - 1) * adjusted_step
 
         courses.append({
             "code": course.code,
