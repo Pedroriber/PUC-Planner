@@ -27,17 +27,34 @@
 </header>
 <div class="container mx-auto px-4 max-w-6xl">
 <main class="py-8">
-<h2 class="text-center text-2xl superbold mb-12 text-blue-900">Curso: {{ program }}</h2>
-<div id="flowchart" class="relative h-[650px] w-full">
+<h2 class="text-center text-2xl superbold mb-6 text-blue-900">Curso: {{ program }}</h2>
+
+{% if courses %}
+<div id="flowchart" class="relative w-full" style="height: {{ flowchart_height|default:650 }}px; max-width: 800px; margin: 0 auto;">
+
+  {% if period_markers %}
+  <div class="period-labels">
+    {% for marker in period_markers %}
+      <div class="period-label" style="top: {{ marker.top }}px;">
+        <span class="period-label-number">{{ marker.period }}º</span>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
 
   {% for c in courses %}
-    <a href="#" title="{{ c.name }}">
-      <div class="flowchart-item" style="{% if c.pos_top_px != None %}top: {{ c.pos_top_px }}px; {% endif %}{% if c.pos_left_pct != None %}left: {{ c.pos_left_pct }}%; {% endif %}">{{ c.code }}</div>
+    <a href="{{ c.syllabus_url|default:'#' }}" title="{{ c.name }}" {% if c.syllabus_url %}target="_blank" rel="noopener"{% endif %}>
+      <div class="flowchart-item" data-code="{{ c.code }}" style="{% if c.pos_top_px != None %}top: {{ c.pos_top_px }}px; {% endif %}{% if c.pos_left_pct != None %}left: {{ c.pos_left_pct }}%; {% endif %}">
+        <strong>{{ c.code }}</strong>
+      </div>
     </a>
   {% endfor %}
 
   <svg id="flowchart-svg" class="absolute top-0 left-0 w-full h-full" style="z-index: -1;"></svg>
 </div>
+{% else %}
+<p class="text-center text-gray-600">Ainda não existem disciplinas cadastradas para este curso.</p>
+{% endif %}
 </main>
 </div>
 {% include 'includes/footer.html' %}
@@ -46,6 +63,13 @@
 <script>
 // Build connections from server-provided data (injected below)
 var connections = {{ connections|safe }};
+if (!Array.isArray(connections)) {
+  connections = [];
+}
+var coreqConnections = {{ coreq_connections|safe }};
+if (!Array.isArray(coreqConnections)) {
+  coreqConnections = [];
+}
 
 function getBlockConnectionPoints(el) {
   const rect = el.getBoundingClientRect();
@@ -80,6 +104,10 @@ function createOrthogonalConnection(a, b) {
   }
 }
 
+function normalizeCode(code) {
+  return (code || '').trim().toLowerCase();
+}
+
 function drawConnections() {
   const container = document.getElementById('flowchart');
   const svg = document.getElementById('flowchart-svg');
@@ -87,26 +115,37 @@ function drawConnections() {
   svg.innerHTML = '';
   const blocks = {};
   container.querySelectorAll('.flowchart-item').forEach(el => {
-    const text = el.textContent.trim();
-    blocks[text] = el;
+    const dataCode = el.dataset.code || '';
+    const key = normalizeCode(dataCode || el.textContent.split('\n')[0]);
+    if (key) {
+      blocks[key] = el;
+    }
   });
   const w = container.offsetWidth;
   const h = container.offsetHeight;
   svg.setAttribute('width', w);
   svg.setAttribute('height', h);
   svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-  connections.forEach(([from, to]) => {
-    const a = blocks[from];
-    const b = blocks[to];
+  const renderConnection = (from, to, options = {}) => {
+    const a = blocks[normalizeCode(from)];
+    const b = blocks[normalizeCode(to)];
     if (!a || !b) return;
     const pointsA = getBlockConnectionPoints(a);
     const pointsB = getBlockConnectionPoints(b);
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', createOrthogonalConnection(pointsA, pointsB));
-    path.setAttribute('stroke', '#000080');
-    path.setAttribute('stroke-width', '2');
+    path.setAttribute('stroke', options.stroke || '#000080');
+    path.setAttribute('stroke-width', options.strokeWidth || 2);
+    if (options.dash) {
+      path.setAttribute('stroke-dasharray', options.dash);
+    }
     path.setAttribute('fill', 'none');
     svg.appendChild(path);
+  };
+
+  connections.forEach(([from, to]) => renderConnection(from, to));
+  coreqConnections.forEach(([left, right]) => {
+    renderConnection(left, right, { stroke: '#1b53d3', strokeWidth: 2.5, dash: '6 4' });
   });
 }
 window.addEventListener('DOMContentLoaded', drawConnections);

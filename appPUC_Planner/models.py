@@ -95,8 +95,19 @@ class Course(models.Model):
 		help_text="Selecione todos os cursos que incluem esta disciplina."
 	)
 	# Pré-requisitos: lista de códigos separados por vírgula (ex: 'MAT 4162, ENG 4010')
-	prerequisites = models.CharField("pré-requisitos", max_length=500, blank=True,
-									 help_text="Códigos separados por vírgula, ex: 'MAT 4162, ENG 4010'")
+	prerequisites = models.CharField(
+		"pré-requisitos",
+		max_length=500,
+		blank=True,
+		help_text="Códigos separados por vírgula, ex: 'MAT 4162, ENG 4010'",
+	)
+	# Co-requisitos: disciplinas que precisam ser cursadas em conjunto
+	corequisites = models.CharField(
+		"co-requisitos",
+		max_length=500,
+		blank=True,
+		help_text="Códigos separados por vírgula para co-requisitos, ex: 'CTC 4001, CTC 4002'",
+	)
 	credits = models.PositiveSmallIntegerField("créditos", default=0)
 	syllabus_url = models.URLField(
 		"link da ementa",

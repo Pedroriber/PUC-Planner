@@ -234,16 +234,26 @@ def fluxograma_course(request, program):
         .order_by('periodo', 'posicao', 'disciplina__code')
     )
 
-    # Constantes simples para converter período/posição em coordenadas.
+    # Constantes para converter período/posição em coordenadas.
     base_top = 20
-    vertical_gap = 130
-    max_columns = 8  # manter alinhado ao admin e validação
-    horizontal_margin = 5  # margem à esquerda em %
-    column_step = 100 / (max_columns + 1)
+    vertical_gap = 150  # mais espaço vertical entre períodos
+    horizontal_margin = 5  # margem lateral
+
+    max_used_column = 1
+    for rel in relacoes:
+        if rel.posicao and rel.posicao > max_used_column:
+            max_used_column = rel.posicao
+
+    usable_width = max(10.0, 100 - (horizontal_margin * 2))
+    columns_span = max(max_used_column - 1, 1)
+    spacing_factor = 0.75  # aproxima blocos horizontalmente
+    column_step = (usable_width * spacing_factor) / columns_span if columns_span else 0
 
     courses = []
+    course_codes = set()
     for rel in relacoes:
         course = rel.disciplina
+        course_codes.add(course.code.strip().lower())
 
         pos_top_px = None
         if rel.periodo:
@@ -251,7 +261,10 @@ def fluxograma_course(request, program):
 
         pos_left_pct = None
         if rel.posicao:
-            pos_left_pct = horizontal_margin + (rel.posicao - 1) * column_step
+            if max_used_column == 1:
+                pos_left_pct = 50
+            else:
+                pos_left_pct = horizontal_margin + (rel.posicao - 1) * column_step
 
         courses.append({
             "code": course.code,
@@ -263,12 +276,28 @@ def fluxograma_course(request, program):
 
     # Conexões continuam baseadas nos pré-requisitos das disciplinas do curso.
     connections = []
+    coreq_pairs = set()
+    coreq_connections = []
     for rel in relacoes:
         course = rel.disciplina
         if course.prerequisites:
             parts = [p.strip() for p in course.prerequisites.split(',') if p.strip()]
             for prereq in parts:
                 connections.append([prereq, course.code])
+
+        if course.corequisites:
+            parts = [p.strip() for p in course.corequisites.split(',') if p.strip()]
+            for coreq in parts:
+                key = tuple(sorted([course.code, coreq], key=lambda x: x.strip().lower()))
+                norm_a, norm_b = (val.strip().lower() for val in key)
+                if norm_a == norm_b:
+                    continue
+                if norm_a not in course_codes or norm_b not in course_codes:
+                    continue
+                if key in coreq_pairs:
+                    continue
+                coreq_pairs.add(key)
+                coreq_connections.append(list(key))
 
     total_periods = curso.periodos or 0
     if not total_periods:
@@ -288,6 +317,7 @@ def fluxograma_course(request, program):
         "program": curso.nome,
         "courses": courses,
         "connections": connections,
+        "coreq_connections": coreq_connections,
         "period_labels": period_labels,
         "period_markers": period_markers,
         "flowchart_height": flowchart_height,

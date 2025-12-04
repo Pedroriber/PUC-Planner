@@ -9,16 +9,17 @@
         }
         .flowchart-item {
         position: absolute;
-        padding: 10px 20px;
+        min-width: 120px;
+        padding: 6px 14px;
         border: 2px solid #0000a9;
-        border-radius: 12px;
-        background: linear-gradient(180deg, #ffffff 0%, #f8f9ff 100%);
+        border-radius: 10px;
+        background: linear-gradient(180deg, #ffffff 0%, #f5f7ff 100%);
         color: #00005f;
-        font-weight: 600;
-        font-size: 0.95rem;
+        font-weight: 700;
+        font-size: 0.9rem;
         text-align: center;
-        box-shadow: 0 4px 8px rgba(0, 0, 100, 0.1);
-        transition: all 0.3s ease;
+        box-shadow: 0 3px 6px rgba(0, 0, 100, 0.12);
+        transition: all 0.25s ease;
         cursor: pointer;
         }
 
@@ -43,4 +44,26 @@
         .bg-navy {
             background-color: #030053;
         }
+
+        .period-labels {
+            position: absolute;
+            left: -55px;
+            top: 0;
+            width: 50px;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .period-label {
+            position: absolute;
+            transform: translateY(-12px);
+            font-weight: 700;
+            color: #0f1f80;
+            font-size: 1.1rem;
+        }
+
+        .period-label-number {
+            display: inline-block;
+        }
+
         
