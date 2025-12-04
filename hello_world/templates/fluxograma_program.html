@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Fluxograma - {{ program }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/fluxograma2.css' %}">
+{% endblock %}
+
+{% block content %}
+<body class="bg-white text-navy flex flex-col min-h-screen">
+<div class="flex flex-col h-screen">
+<header class="flex justify-between items-center py-4 bg-navy text-white px-8">
+<a href="{% url 'home' %}">
+  <div class="text-2xl font-superbold">
+    <img src="{% static 'images/logo_puc_planner_fundoazul.svg' %}" width="200px" style="border-radius: 20px;">
+</div>
+</a>
+<h1 class="text-3xl font-superbold flex-1 text-center">Fluxograma</h1>
+
+<div style="width:200px" class="flex items-center justify-end">
+  <button id="download-pdf" class="bg-white text-blue-900 font-bold py-2 px-4 rounded shadow hover:opacity-90 flex items-center">
+    <span class="material-icons mr-2" aria-hidden="true" style="font-size:20px">download</span>
+    Baixar PDF
+  </button>
+</div>
+</header>
+<div class="container mx-auto px-4 max-w-6xl">
+<main class="py-8">
+<h2 class="text-center text-2xl superbold mb-12 text-blue-900">Curso: {{ program }}</h2>
+<div id="flowchart" class="relative h-[650px] w-full">
+
+  {% for c in courses %}
+    <a href="#" title="{{ c.name }}">
+      <div class="flowchart-item" style="{% if c.pos_top_px != None %}top: {{ c.pos_top_px }}px; {% endif %}{% if c.pos_left_pct != None %}left: {{ c.pos_left_pct }}%; {% endif %}">{{ c.code }}</div>
+    </a>
+  {% endfor %}
+
+  <svg id="flowchart-svg" class="absolute top-0 left-0 w-full h-full" style="z-index: -1;"></svg>
+</div>
+</main>
+</div>
+{% include 'includes/footer.html' %}
+</div>
+
+<script>
+// Build connections from server-provided data (injected below)
+var connections = {{ connections|safe }};
+
+function getBlockConnectionPoints(el) {
+  const rect = el.getBoundingClientRect();
+  const parentRect = el.offsetParent.getBoundingClientRect();
+  const x = rect.left - parentRect.left;
+  const y = rect.top - parentRect.top;
+  const w = rect.width;
+  const h = rect.height;
+  return {
+    top: { x: x + w/2, y: y },
+    bottom: { x: x + w/2, y: y + h },
+    left: { x: x, y: y + h/2 },
+    right: { x: x + w, y: y + h/2 },
+    center: { x: x + w/2, y: y + h/2 },
+    rect: { x, y, w, h }
+  };
+}
+
+function createOrthogonalConnection(a, b) {
+  const verticalThreshold = 50;
+  if (Math.abs(a.center.y - b.center.y) < verticalThreshold) {
+    const isALeftOfB = a.center.x < b.center.x;
+    const start = isALeftOfB ? a.right : a.left;
+    const end = isALeftOfB ? b.left : b.right;
+    return `M ${start.x} ${start.y} L ${end.x} ${end.y}`;
+  } else {
+    const isAAboveB = a.center.y < b.center.y;
+    const start = isAAboveB ? a.bottom : a.top;
+    const end = isAAboveB ? b.top : b.bottom;
+    const midY = (start.y + end.y) / 2;
+    return `M ${start.x} ${start.y} L ${start.x} ${midY} L ${end.x} ${midY} L ${end.x} ${end.y}`;
+  }
+}
+
+function drawConnections() {
+  const container = document.getElementById('flowchart');
+  const svg = document.getElementById('flowchart-svg');
+  if (!container || !svg) return;
+  svg.innerHTML = '';
+  const blocks = {};
+  container.querySelectorAll('.flowchart-item').forEach(el => {
+    const text = el.textContent.trim();
+    blocks[text] = el;
+  });
+  const w = container.offsetWidth;
+  const h = container.offsetHeight;
+  svg.setAttribute('width', w);
+  svg.setAttribute('height', h);
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  connections.forEach(([from, to]) => {
+    const a = blocks[from];
+    const b = blocks[to];
+    if (!a || !b) return;
+    const pointsA = getBlockConnectionPoints(a);
+    const pointsB = getBlockConnectionPoints(b);
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', createOrthogonalConnection(pointsA, pointsB));
+    path.setAttribute('stroke', '#000080');
+    path.setAttribute('stroke-width', '2');
+    path.setAttribute('fill', 'none');
+    svg.appendChild(path);
+  });
+}
+window.addEventListener('DOMContentLoaded', drawConnections);
+window.addEventListener('resize', drawConnections);
+</script>
+
+<!-- PDF scripts (same as fluxograma2.html) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  (function(){
+    const btn = document.getElementById('download-pdf');
+    const element = document.getElementById('flowchart');
+    if (!btn || !element) return;
+    btn.addEventListener('click', async function () {
+      try {
+        if (typeof drawConnections === 'function') drawConnections();
+        await new Promise(resolve => setTimeout(resolve, 100));
+        const canvas = await html2canvas(element, { scale: 2, logging: false, useCORS: true, backgroundColor: '#ffffff' });
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: 'a4' });
+        const imgWidth = pdf.internal.pageSize.getWidth();
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        pdf.addImage(canvas.toDataURL('image/jpeg', 1.0), 'JPEG', 0, 0, imgWidth, imgHeight, undefined, 'FAST');
+        pdf.save('fluxograma.pdf');
+      } catch (e) {
+        console.error('Erro ao gerar PDF:', e);
+        alert('Não foi possível gerar o PDF. Por favor, tente novamente.');
+      }
+    });
+  })();
+</script>
+</body>
+{% endblock %}
