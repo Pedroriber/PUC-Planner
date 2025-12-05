@@ -205,7 +205,10 @@ def redefinir_senha(request, uidb64, token):
 
 @login_required
 def consulta_disciplina(request):
-    return render(request, "consulta_disciplina.html")
+    disciplinas = Course.objects.all()
+    return render(request, "consulta_disciplina.html", {
+        "disciplinas": disciplinas
+    })
 
 
 @login_required

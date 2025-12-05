@@ -10,6 +10,8 @@
 {% block content %}
 <body class="bg-gray-100 font-regular" style="background-image: url('{% static 'images/testefundosetas.png' %}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
 <div class="flex flex-col h-screen">
+    
+    <!-- HEADER -->
     <header class="flex justify-between items-center py-4 bg-navy text-white px-8">
         <a href="{% url 'home' %}">
             <div class="text-2xl font-superbold">
@@ -21,43 +23,41 @@
     </header>
 
     <main class="flex-grow p-12 shadow-inner">
-        <div>
-            <div class="max-w-4xl mx-auto">
-                <div class="relative mb-8">
-                    <span class="material-icons absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-2xl">search</span>
-                    <input class="w-full pl-16 pr-6 py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg font-regular" placeholder="Digite o nome ou código da disciplina" type="text"/>
-                </div>
+        <div class="max-w-4xl mx-auto">
 
-                <div class="space-y-6">
-                    <div class="border border-blue-900 rounded-lg p-6 flex justify-between items-center cursor-pointer hover:bg-blue-50 transition-colors bg-white">
-                        <div>
-                            <p class="font-superbold text-blue-900 text-lg">CTC 4001 - Modelagem e programação</p>
-                            <span class="text-base text-gray-600 font-regular">Ver pré e co-requisitos</span>
-                        </div>
-                        <span class="material-icons text-blue-900 text-3xl">chevron_right</span>
-                    </div>
-
-                    <div class="border border-blue-900 rounded-lg p-6 flex justify-between items-center cursor-pointer hover:bg-blue-50 transition-colors bg-white">
-                        <div>
-                            <p class="font-superbold text-blue-900 text-lg">ENG4021 - Projeto Integrado de Software</p>
-                            <span class="text-base text-gray-600 font-regular">Ver pré e co-requisitos</span>
-                        </div>
-                        <span class="material-icons text-blue-900 text-3xl">chevron_right</span>
-                    </div>
-
-                    <div class="border border-blue-900 rounded-lg p-6 flex justify-between items-center cursor-pointer hover:bg-blue-50 transition-colors bg-white">
-                        <div>
-                            <p class="font-superbold text-blue-900 text-lg">MAT 4162 - Cálculo a duas variáveis</p>
-                            <span class="text-base text-gray-600 font-regular">Ver pré e co-requisitos</span>
-                        </div>
-                        <span class="material-icons text-blue-900 text-3xl">chevron_right</span>
-                    </div>
-                </div>
+            <div class="relative mb-8">
+                <span class="material-icons absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-2xl">search</span>
+                <input 
+                    id="search"
+                    type="text" 
+                    placeholder="Digite o nome ou código da disciplina" 
+                    class="w-full pl-16 pr-6 py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg font-regular"
+                >
             </div>
+            <div id="lista-disciplinas" class="space-y-6">
+                {% for d in disciplinas %}
+                <div class="card border border-blue-900 rounded-lg p-6 flex justify-between items-center cursor-pointer hover:bg-blue-50 transition-colors bg-white mb-4">
+                    <div>
+                        <p class="nome font-superbold text-blue-900 text-lg">
+                            {{ d.code }} - {{ d.name }}
+                        </p>
+                        <span class="text-base text-gray-600 font-regular">
+                            Ver pré e co-requisitos
+                        </span>
+                    </div>
+
+                    <span class="material-icons text-blue-900 text-3xl">chevron_right</span>
+                </div>
+                {% endfor %}
+            </div>
+
         </div>
     </main>
 
     {% include 'includes/footer.html' %}
+
 </div>
+
+
 </body>
 {% endblock %}
