@@ -57,7 +57,21 @@
     {% include 'includes/footer.html' %}
 
 </div>
-
+<script>
+    const searchInput = document.getElementById("search");
+    const cards = document.querySelectorAll("#lista-disciplinas .card");
+    searchInput.addEventListener("input", () => {
+        const filtro = searchInput.value.toLowerCase();
+        cards.forEach(card => {
+            const nome = card.querySelector(".nome").innerText.toLowerCase();
+            if (nome.includes(filtro)) {
+                card.style.display = "flex";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    });
+</script>
 
 </body>
 {% endblock %}
