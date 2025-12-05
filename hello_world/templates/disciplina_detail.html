@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ disciplina.name }} - Detalhes{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/consulta_disciplina1.css' %}">
+{% endblock %}
+
+{% block content %}
+<body class="bg-gray-100 font-regular" style="background-image: url('{% static 'images/testefundosetas.png' %}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+<div class="flex flex-col min-h-screen">
+
+    <!-- Navbar simplificado com seta de voltar -->
+    <header class="flex items-center py-4 bg-navy text-white px-8">
+        <a href="{% url 'consulta_disciplina' %}" class="flex items-center">
+            <span class="material-icons text-white text-3xl mr-2">arrow_back</span>
+            <span class="text-lg font-semibold">Voltar</span>
+        </a>
+        <div class="flex-1"></div>
+        <a href="{% url 'home' %}">
+            <img src="{% static 'images/logo_puc_planner_fundoazul.svg' %}" width="150px" style="border-radius: 20px;">
+        </a>
+    </header>
+
+    <!-- Conteúdo principal -->
+    <main class="flex-grow p-12 shadow-inner">
+        <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+
+            <h1 class="text-3xl font-bold mb-4">{{ disciplina.code }} - {{ disciplina.name }}</h1>
+            <p class="text-gray-700 mb-6">{{ disciplina.description }}</p>
+
+            <div class="mb-6">
+                <h2 class="text-2xl font-semibold mb-2">Pré-requisitos:</h2>
+                {% if prereqs %}
+                    <ul class="list-disc list-inside">
+                    {% for item in prereqs %}
+                        <li>{{ item.code }} - {{ item.name }}</li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>Nenhum pré-requisito.</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <h2 class="text-2xl font-semibold mb-2">Co-requisitos:</h2>
+                {% if coreqs %}
+                    <ul class="list-disc list-inside">
+                    {% for item in coreqs %}
+                        <li>{{ item.code }} - {{ item.name }}</li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>Nenhum co-requisito.</p>
+                {% endif %}
+            </div>
+
+        </div>
+    </main>
+
+    {% include 'includes/footer.html' %}
+
+</div>
+</body>
+{% endblock %}

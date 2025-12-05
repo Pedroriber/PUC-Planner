@@ -11,9 +11,8 @@
 <body class="bg-gray-100 font-regular" style="background-image: url('{% static 'images/testefundosetas.png' %}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
 <div class="flex flex-col h-screen">
     
-    <!-- HEADER -->
     <header class="flex justify-between items-center py-4 bg-navy text-white px-8">
-        <a href="{% url 'home' %}">
+        <a href="{% url 'home' %}" id="">
             <div class="text-2xl font-superbold">
                 <img src="{% static 'images/logo_puc_planner_fundoazul.svg' %}" width="200px" style="border-radius: 20px;">
             </div>
@@ -22,11 +21,8 @@
         <button class="text-white"></button>
     </header>
 
-    <!-- MAIN -->
     <main class="flex-grow p-12 shadow-inner">
         <div class="max-w-4xl mx-auto">
-
-            <!-- SEARCH BAR -->
             <div class="relative mb-8">
                 <span class="material-icons absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-2xl">search</span>
                 <input 
@@ -37,21 +33,20 @@
                 >
             </div>
 
-            <!-- LISTA DE DISCIPLINAS -->
             <div id="lista-disciplinas" class="space-y-6">
                 {% for d in disciplinas %}
-                <div class="card border border-blue-900 rounded-lg p-6 flex justify-between items-center cursor-pointer hover:bg-blue-50 transition-colors bg-white mb-4">
+                <a href="{% url 'disciplina_detail' d.code %}"
+                    class="card border border-blue-900 rounded-lg p-6 flex justify-between items-center cursor-pointer hover:bg-blue-50 transition-colors bg-white mb-4 no-underline">
                     <div>
                         <p class="nome font-superbold text-blue-900 text-lg">
-                            {{ d.code }} - {{ d.name }}
+                                {{ d.code }} - {{ d.name }}
                         </p>
                         <span class="text-base text-gray-600 font-regular">
                             Ver pré e co-requisitos
                         </span>
                     </div>
-
                     <span class="material-icons text-blue-900 text-3xl">chevron_right</span>
-                </div>
+                </a>
                 {% endfor %}
             </div>
 

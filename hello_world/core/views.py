@@ -416,3 +416,32 @@ def course_delete(request, pk):
         return redirect("course_list")
     
     return render(request, "courses/course_confirm_delete.html", {"course": course})
+
+def disciplina_detail(request, code):
+    disciplina = get_object_or_404(Course, code=code)
+
+    def get_related_courses(text):
+        if not text:
+            return []
+        codes = [c.strip() for c in text.split(",") if c.strip()]
+        cursos_existentes = Course.objects.filter(code__in=codes)
+        encontrados = {c.code: c.name for c in cursos_existentes}
+
+        # Cria uma lista de dicionários: {"code": ..., "name": ...}
+        resultado = []
+        for c in codes:
+            if c in encontrados:
+                resultado.append({"code": c, "name": encontrados[c]})
+            else:
+                # Se não existe no banco, apenas coloca o código como nome também
+                resultado.append({"code": c, "name": c})
+        return resultado
+
+    prereqs = get_related_courses(disciplina.prerequisites)
+    coreqs = get_related_courses(disciplina.corequisites)
+
+    return render(request, "disciplina_detail.html", {
+        "disciplina": disciplina,
+        "prereqs": prereqs,
+        "coreqs": coreqs,
+    })

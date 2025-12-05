@@ -155,5 +155,3 @@ class CursoDisciplina(models.Model):
 			parts.append(f"pos {self.posicao}")
 		info = f" ({', '.join(parts)})" if parts else ""
 		return f"{self.disciplina.code} em {self.curso.nome}{info}"
-
-

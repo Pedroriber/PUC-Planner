@@ -43,7 +43,10 @@ urlpatterns = [
     path("disciplinas/nova/", core_views.course_create, name="course_create"),
     path("disciplinas/<int:pk>/editar/", core_views.course_update, name="course_update"),
     path("disciplinas/<int:pk>/deletar/", core_views.course_delete, name="course_delete"),
-    
+
+    path("consulta-disciplina/<str:code>/", core_views.disciplina_detail, name="disciplina_detail"),
+
+
     path("admin/", admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
