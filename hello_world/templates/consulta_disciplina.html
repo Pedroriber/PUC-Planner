@@ -10,6 +10,8 @@
 {% block content %}
 <body class="bg-gray-100 font-regular" style="background-image: url('{% static 'images/testefundosetas.png' %}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
 <div class="flex flex-col h-screen">
+    
+    <!-- HEADER -->
     <header class="flex justify-between items-center py-4 bg-navy text-white px-8">
         <a href="{% url 'home' %}">
             <div class="text-2xl font-superbold">
@@ -20,9 +22,11 @@
         <button class="text-white"></button>
     </header>
 
+    <!-- MAIN -->
     <main class="flex-grow p-12 shadow-inner">
         <div class="max-w-4xl mx-auto">
 
+            <!-- SEARCH BAR -->
             <div class="relative mb-8">
                 <span class="material-icons absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-2xl">search</span>
                 <input 
@@ -32,6 +36,8 @@
                     class="w-full pl-16 pr-6 py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg font-regular"
                 >
             </div>
+
+            <!-- LISTA DE DISCIPLINAS -->
             <div id="lista-disciplinas" class="space-y-6">
                 {% for d in disciplinas %}
                 <div class="card border border-blue-900 rounded-lg p-6 flex justify-between items-center cursor-pointer hover:bg-blue-50 transition-colors bg-white mb-4">
@@ -55,21 +61,7 @@
     {% include 'includes/footer.html' %}
 
 </div>
-<script>
-    const searchInput = document.getElementById("search");
-    const cards = document.querySelectorAll("#lista-disciplinas .card");
-    searchInput.addEventListener("input", () => {
-        const filtro = searchInput.value.toLowerCase();
-        cards.forEach(card => {
-            const nome = card.querySelector(".nome").innerText.toLowerCase();
-            if (nome.includes(filtro)) {
-                card.style.display = "flex";
-            } else {
-                card.style.display = "none";
-            }
-        });
-    });
-</script>
+
 
 </body>
 {% endblock %}
