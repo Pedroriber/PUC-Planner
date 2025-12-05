@@ -61,7 +61,20 @@
     {% include 'includes/footer.html' %}
 
 </div>
+<script>
+    const searchInput = document.getElementById("search");
+    const cards = document.querySelectorAll("#lista-disciplinas .card");
 
+    searchInput.addEventListener("input", () => {
+        const filtro = searchInput.value.toLowerCase();
+
+        cards.forEach(card => {
+            const nome = card.querySelector(".nome").innerText.toLowerCase();
+
+            card.style.display = nome.includes(filtro) ? "flex" : "none";
+        });
+    });
+</script>
 
 </body>
 {% endblock %}
