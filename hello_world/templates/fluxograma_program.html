@@ -17,13 +17,7 @@
 </div>
 </a>
 <h1 class="text-3xl font-superbold flex-1 text-center">Fluxograma</h1>
-
-<div style="width:200px" class="flex items-center justify-end">
-  <button id="download-pdf" class="bg-white text-blue-900 font-bold py-2 px-4 rounded shadow hover:opacity-90 flex items-center">
-    <span class="material-icons mr-2" aria-hidden="true" style="font-size:20px">download</span>
-    Baixar PDF
-  </button>
-</div>
+<div style="width:200px;"></div>
 </header>
 <div class="container mx-auto px-4 max-w-6xl">
 <main class="py-8">
@@ -323,31 +317,5 @@ window.addEventListener('DOMContentLoaded', drawConnections);
 window.addEventListener('resize', drawConnections);
 </script>
 
-<!-- PDF scripts (same as fluxograma2.html) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-  (function(){
-    const btn = document.getElementById('download-pdf');
-    const element = document.getElementById('flowchart');
-    if (!btn || !element) return;
-    btn.addEventListener('click', async function () {
-      try {
-        if (typeof drawConnections === 'function') drawConnections();
-        await new Promise(resolve => setTimeout(resolve, 100));
-        const canvas = await html2canvas(element, { scale: 2, logging: false, useCORS: true, backgroundColor: '#ffffff' });
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: 'a4' });
-        const imgWidth = pdf.internal.pageSize.getWidth();
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        pdf.addImage(canvas.toDataURL('image/jpeg', 1.0), 'JPEG', 0, 0, imgWidth, imgHeight, undefined, 'FAST');
-        pdf.save('fluxograma.pdf');
-      } catch (e) {
-        console.error('Erro ao gerar PDF:', e);
-        alert('Não foi possível gerar o PDF. Por favor, tente novamente.');
-      }
-    });
-  })();
-</script>
 </body>
 {% endblock %}
