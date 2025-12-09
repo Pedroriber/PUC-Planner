@@ -1,0 +1,321 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Fluxograma - {{ program }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/fluxograma2.css' %}">
+{% endblock %}
+
+{% block content %}
+<body class="bg-white text-navy flex flex-col min-h-screen">
+<div class="flex flex-col h-screen">
+<header class="flex justify-between items-center py-4 bg-navy text-white px-8">
+<a href="{% url 'home' %}">
+  <div class="text-2xl font-superbold">
+    <img src="{% static 'images/logo_puc_planner_fundoazul.svg' %}" width="200px" style="border-radius: 20px;">
+</div>
+</a>
+<h1 class="text-3xl font-superbold flex-1 text-center">Fluxograma</h1>
+<div style="width:200px;"></div>
+</header>
+<div class="container mx-auto px-4 max-w-6xl">
+<main class="py-8">
+<h2 class="text-center text-2xl superbold mb-6 text-blue-900">Curso: {{ program }}</h2>
+
+{% if courses %}
+<div id="flowchart" class="relative w-full" style="height: {{ flowchart_height|default:650 }}px; max-width: 960px; margin: 0 0 0 2rem;">
+
+  {% if period_markers %}
+  <div class="period-labels">
+    {% for marker in period_markers %}
+      <div class="period-label" style="top: {{ marker.top }}px;">
+        <span class="period-label-number">{{ marker.period }}º</span>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% for c in courses %}
+    <a href="{{ c.syllabus_url|default:'#' }}" title="{{ c.name }}" {% if c.syllabus_url %}target="_blank" rel="noopener"{% endif %}>
+      <div class="flowchart-item" data-code="{{ c.code }}" style="{% if c.pos_top_px != None %}top: {{ c.pos_top_px }}px; {% endif %}{% if c.pos_left_pct != None %}left: {{ c.pos_left_pct }}%; {% endif %}">
+        <strong>{{ c.code }}</strong>
+      </div>
+    </a>
+  {% endfor %}
+
+  <svg id="flowchart-svg" class="absolute top-0 left-0 w-full h-full" style="z-index: -1;"></svg>
+</div>
+{% else %}
+<p class="text-center text-gray-600">Ainda não existem disciplinas cadastradas para este curso.</p>
+{% endif %}
+</main>
+</div>
+{% include 'includes/footer.html' %}
+</div>
+
+<script>
+// Build connections from server-provided data (injected below)
+var connections = {{ connections|safe }};
+if (!Array.isArray(connections)) {
+  connections = [];
+}
+var coreqConnections = {{ coreq_connections|safe }};
+if (!Array.isArray(coreqConnections)) {
+  coreqConnections = [];
+}
+
+const DEFAULT_STROKE = '#000080';
+const INTERSECTION_STROKE = '#f07c25';
+
+function getBlockConnectionPoints(el) {
+  const rect = el.getBoundingClientRect();
+  const parentRect = el.offsetParent.getBoundingClientRect();
+  const x = rect.left - parentRect.left;
+  const y = rect.top - parentRect.top;
+  const w = rect.width;
+  const h = rect.height;
+  return {
+    top: { x: x + w/2, y: y },
+    bottom: { x: x + w/2, y: y + h },
+    left: { x: x, y: y + h/2 },
+    right: { x: x + w, y: y + h/2 },
+    center: { x: x + w/2, y: y + h/2 },
+    rect: { x, y, w, h }
+  };
+}
+
+function createOrthogonalConnection(a, b, routing) {
+  const verticalThreshold = 50;
+  const verticalDistance = Math.abs(a.center.y - b.center.y);
+  const segments = [];
+  const points = [];
+  const localHorizontalCache = new Map();
+  const horizontalStep = routing.horizontalStep || 8;
+  const tolerance = routing.horizontalTolerance || 3;
+
+  function allocateHorizontal(y) {
+    const key = Math.round(y);
+    if (localHorizontalCache.has(key)) {
+      return localHorizontalCache.get(key);
+    }
+    let level = routing.horizontalLevels.find(entry => Math.abs(entry.base - y) <= tolerance);
+    if (!level) {
+      level = { base: y, count: 0 };
+      routing.horizontalLevels.push(level);
+    }
+    let offset = 0;
+    if (level.count > 0) {
+      const magnitude = Math.ceil(level.count / 2);
+      const sign = level.count % 2 === 1 ? 1 : -1;
+      offset = magnitude * horizontalStep * sign;
+    }
+    level.count += 1;
+    const adjusted = y + offset;
+    localHorizontalCache.set(key, adjusted);
+    return adjusted;
+  }
+
+  function pushPoint(x, y) {
+    const last = points[points.length - 1];
+    if (last && last.x === x && last.y === y) {
+      return;
+    }
+    points.push({ x, y });
+    if (last) {
+      segments.push({ x1: last.x, y1: last.y, x2: x, y2: y });
+    }
+  }
+
+  if (verticalDistance < verticalThreshold) {
+    const isALeftOfB = a.center.x < b.center.x;
+    const start = isALeftOfB ? a.right : a.left;
+    const end = isALeftOfB ? b.left : b.right;
+    const horizontalY = allocateHorizontal(start.y);
+    pushPoint(start.x, start.y);
+    pushPoint(start.x, horizontalY);
+    pushPoint(end.x, horizontalY);
+    pushPoint(end.x, end.y);
+  } else {
+    const isAAboveB = a.center.y < b.center.y;
+    const start = isAAboveB ? a.bottom : a.top;
+    const end = isAAboveB ? b.top : b.bottom;
+    const needsDetour = verticalDistance > 180;
+    if (!needsDetour) {
+      const midY = allocateHorizontal((start.y + end.y) / 2);
+      pushPoint(start.x, start.y);
+      pushPoint(start.x, midY);
+      pushPoint(end.x, midY);
+      pushPoint(end.x, end.y);
+    } else {
+      const buffer = 20;
+      const laneLeft = routing.lanes.left;
+      const laneRight = routing.lanes.right;
+      const distanceLeft = Math.abs(start.x - laneLeft) + Math.abs(end.x - laneLeft);
+      const distanceRight = Math.abs(start.x - laneRight) + Math.abs(end.x - laneRight);
+      const targetLaneBase = distanceLeft <= distanceRight ? 'left' : 'right';
+      const laneX = routing.allocateDetourLane(targetLaneBase);
+      const firstVerticalTarget = isAAboveB ? start.y + buffer : start.y - buffer;
+      const secondVerticalTarget = isAAboveB ? end.y - buffer : end.y + buffer;
+
+      const firstY = allocateHorizontal(firstVerticalTarget);
+      const secondY = allocateHorizontal(secondVerticalTarget);
+
+      pushPoint(start.x, start.y);
+      pushPoint(start.x, firstY);
+      pushPoint(laneX, firstY);
+      pushPoint(laneX, secondY);
+      pushPoint(end.x, secondY);
+      pushPoint(end.x, end.y);
+    }
+  }
+
+  const commands = [];
+  if (points.length) {
+    commands.push(`M ${points[0].x} ${points[0].y}`);
+    for (let i = 1; i < points.length; i++) {
+      commands.push(`L ${points[i].x} ${points[i].y}`);
+    }
+  }
+
+  return { d: commands.join(' '), segments };
+}
+
+function isEndpoint(segment, x, y) {
+  return (
+    (segment.x1 === x && segment.y1 === y) ||
+    (segment.x2 === x && segment.y2 === y)
+  );
+}
+
+function segmentsIntersect(segA, segB) {
+  const horizA = segA.y1 === segA.y2;
+  const horizB = segB.y1 === segB.y2;
+  if (horizA === horizB) {
+    return false;
+  }
+  const horizontal = horizA ? segA : segB;
+  const vertical = horizA ? segB : segA;
+  const minHx = Math.min(horizontal.x1, horizontal.x2);
+  const maxHx = Math.max(horizontal.x1, horizontal.x2);
+  const minVy = Math.min(vertical.y1, vertical.y2);
+  const maxVy = Math.max(vertical.y1, vertical.y2);
+  const x = vertical.x1;
+  const y = horizontal.y1;
+  const withinX = x >= minHx && x <= maxHx;
+  const withinY = y >= minVy && y <= maxVy;
+  if (!withinX || !withinY) {
+    return false;
+  }
+  if (isEndpoint(horizontal, x, y) || isEndpoint(vertical, x, y)) {
+    return false;
+  }
+  return true;
+}
+
+function normalizeCode(code) {
+  return (code || '').trim().toLowerCase();
+}
+
+function drawConnections() {
+  const container = document.getElementById('flowchart');
+  const svg = document.getElementById('flowchart-svg');
+  if (!container || !svg) return;
+  svg.innerHTML = '';
+  const existingSegments = [];
+  const blocks = {};
+  const blockPointCache = new Map();
+  const getPoints = (el) => {
+    if (!blockPointCache.has(el)) {
+      blockPointCache.set(el, getBlockConnectionPoints(el));
+    }
+    return blockPointCache.get(el);
+  };
+  let minBlockX = Infinity;
+  let maxBlockX = -Infinity;
+  container.querySelectorAll('.flowchart-item').forEach(el => {
+    const dataCode = el.dataset.code || '';
+    const key = normalizeCode(dataCode || el.textContent.split('\n')[0]);
+    if (key) {
+      blocks[key] = el;
+      const points = getPoints(el);
+      minBlockX = Math.min(minBlockX, points.rect.x);
+      maxBlockX = Math.max(maxBlockX, points.rect.x + points.rect.w);
+    }
+  });
+  const w = container.offsetWidth;
+  const h = container.offsetHeight;
+  if (!isFinite(minBlockX) || !isFinite(maxBlockX)) {
+    return;
+  }
+  svg.setAttribute('width', w);
+  svg.setAttribute('height', h);
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  svg.style.overflow = 'visible';
+  const laneBuffer = 60; // keeps detours outside blocks without looking detached
+  const lanes = {
+    left: minBlockX - laneBuffer,
+    right: maxBlockX + laneBuffer
+  };
+  const routingState = {
+    lanes,
+    horizontalLevels: [],
+    horizontalStep: 8,
+    horizontalTolerance: 3,
+    detourLaneStep: 10,
+    detourLaneState: {
+      left: { index: 0 },
+      right: { index: 0 }
+    },
+    allocateDetourLane(side) {
+      const node = this.detourLaneState[side];
+      if (!node) return this.lanes[side];
+      const base = this.lanes[side];
+      if (node.index === 0) {
+        node.index = 1;
+        return base;
+      }
+      const magnitude = Math.ceil(node.index / 2);
+      const sign = node.index % 2 === 1 ? 1 : -1;
+      const offset = magnitude * this.detourLaneStep * sign;
+      node.index += 1;
+      return base + offset;
+    }
+  };
+  const renderConnection = (from, to, options = {}) => {
+    const a = blocks[normalizeCode(from)];
+    const b = blocks[normalizeCode(to)];
+    if (!a || !b) return;
+    const pointsA = getPoints(a);
+    const pointsB = getPoints(b);
+    const connectionPath = createOrthogonalConnection(pointsA, pointsB, routingState);
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const intersects = connectionPath.segments.some(seg =>
+      existingSegments.some(prev => segmentsIntersect(seg, prev))
+    );
+    const baseStroke = options.stroke || DEFAULT_STROKE;
+    const strokeColor = (baseStroke === DEFAULT_STROKE && intersects)
+      ? INTERSECTION_STROKE
+      : baseStroke;
+    path.setAttribute('d', connectionPath.d);
+    path.setAttribute('stroke', strokeColor);
+    path.setAttribute('stroke-width', options.strokeWidth || 2);
+    if (options.dash) {
+      path.setAttribute('stroke-dasharray', options.dash);
+    }
+    path.setAttribute('fill', 'none');
+    svg.appendChild(path);
+    existingSegments.push(...connectionPath.segments);
+  };
+
+  connections.forEach(([from, to]) => renderConnection(from, to));
+  coreqConnections.forEach(([left, right]) => {
+    renderConnection(left, right, { stroke: '#1b53d3', strokeWidth: 2.5, dash: '6 4' });
+  });
+}
+window.addEventListener('DOMContentLoaded', drawConnections);
+window.addEventListener('resize', drawConnections);
+</script>
+
+</body>
+{% endblock %}

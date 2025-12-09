@@ -1,0 +1,45 @@
+body {
+            font-family: 'Rethink Sans', sans-serif;
+            font-weight: 400;}
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Rethink Sans', sans-serif;
+            font-weight: 700;}
+        .font-regular {
+             font-family: 'Rethink Sans', sans-serif;
+            font-weight: 400;}
+        .font-bold {
+             font-family: 'Rethink Sans', sans-serif;
+            font-weight: 700;}
+        .bg-navy {
+        background-color: #030053 !important;}
+        .text-navy {
+        color: #030053 !important;}
+        .border-navy {
+        border-color: #030053 !important;}
+        .card-hover {
+        transition: background-color 0.3s, color 0.8s, transform 0.8s;}
+        .card-hover:hover {
+        background-color: #ffb52f !important;
+        color: #030053 !important;
+        animation: bounceUp 0.8s;
+        }
+        .card-hover:hover h2,
+        .card-hover:hover p {
+        color: #030053 !important;
+        }
+        @keyframes bounceUp {
+        0%   { transform: translateY(0); }
+        50%  { transform: translateY(-18px); }
+        100% { transform: translateY(0); }
+        }
+        .btn-comecar {
+        background-color: #fff;
+        color: #030053;
+        transition: background-color 0.3s, color 0.3s;
+        font-weight: 700;
+        }
+        .btn-comecar:hover {
+        background-color: #030053 !important;
+        color: #fff !important;
+        box-shadow: 0 0 16px 4px #ffb52f;
+    }

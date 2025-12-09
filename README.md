@@ -1,25 +1,51 @@
-# GitHub Codespaces ♥️ Django
+# PUC Planner
 
-Welcome to your shiny new Codespace running Django! We've got everything fired up and running for you to explore Django.
+Sistema de planejamento acadêmico para estudantes da PUC-Rio. Oferece visualização dinâmica das relações entre disciplinas, incluindo pré-requisitos, co-requisitos e grade horária personalizada.
 
-You've got a blank canvas to work on from a git perspective as well. There's a single initial commit with what you're seeing right now - where you go from here is up to you!
+## Instalação
 
-Everything you do here is contained within this one codespace. There is no repository on GitHub yet. If and when you’re ready you can click "Publish Branch" and we’ll create your repository and push up your project. If you were just exploring then and have no further need for this code then you can simply delete your codespace and it's gone forever.
+### 1. Clone o repositório e instale as dependências
 
-## installing dependancies
-
-```python
+```bash
 pip install -r requirements.txt
 ```
 
-## To collect static files:
+### 2. Configure o ambiente (opcional)
 
-```python
-python manage.py collectstatic
+Copie `.env.example` para `.env` se desejar customizar configurações:
+
+```bash
+cp .env.example .env
 ```
 
-## To run this application:
+### 3. Configure o banco de dados
 
-```python
+```bash
+python manage.py migrate
+```
+
+### 4. Execute a aplicação
+
+```bash
 python manage.py runserver
 ```
+
+Acesse: **http://127.0.0.1:8000/**
+
+## Primeiro Acesso
+
+Cadastre-se em: **http://127.0.0.1:8000/cadastro/**
+
+## Funcionalidades
+
+- Sistema de autenticação por matrícula
+- Consulta de disciplinas
+- Visualização de fluxograma interativo
+- Grade horária personalizada
+- Recuperação de senha via email
+
+## Tecnologias
+
+- Django 5.2.7
+- Python 3.8+
+- SQLite

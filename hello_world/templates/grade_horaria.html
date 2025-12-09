@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Grade Horária - PUC Planner{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/grade_horaria.css' %}">
+<style>
+    body { font-family: 'Rethink Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    .bg-navy { background-color: #030053; }
+    .text-navy { color: #030053; }
+    .slot-occupied { background: #eef2ff; }
+    .class-chip { cursor: grab; }
+    .drop-ok { outline: 2px dashed #16a34a; outline-offset: -4px; }
+    .drop-bad { outline: 2px dashed #dc2626; outline-offset: -4px; }
+    .logo-puc {
+        height: 48px;
+        width: auto;
+        object-fit: contain;
+    }
+    @media (min-width: 768px) {
+        .logo-puc { height: 56px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<body class="bg-white text-navy flex flex-col min-h-screen">
+<div class="flex flex-col h-screen">
+    <header class="flex items-center py-4 bg-navy text-white px-8 shadow-md">
+        <a href="{% url 'home' %}">
+            <div class="text-2xl font-superbold">
+                <img src="{% static 'images/logo_puc_planner_fundoazul.svg' %}" width="200px" style="border-radius: 20px;" class="logo-puc">
+            </div>
+        </a>
+        <h1 class="text-3xl font-superbold flex-1 text-center">Grade Horária</h1>
+        <div class="flex items-center gap-2">
+            <button id="btnClear" class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-sm">Limpar</button>
+            <button id="btnExport" class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-sm">Exportar</button>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-6 py-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+        <aside class="col-span-1">
+            <div class="relative mb-6">
+                <input id="search" class="w-full pl-10 pr-4 py-2 border border-blue-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 regular" placeholder="Pesquise pela disciplina" type="text"/>
+                <span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-blue-900">search</span>
+            </div>
+            <div class="mb-2 text-xs text-slate-600">
+                Arraste um item para a grade. Cada disciplina ocupa <b>2 horas</b> automaticamente.
+            </div>
+            <ul id="courseList" class="space-y-2 max-h-[52vh] overflow-auto pr-1"></ul>
+        </aside>
+
+        <div class="col-span-3">
+            <div class="overflow-x-auto">
+                <table id="grid" class="w-full border-collapse border border-blue-900">
+                    <thead>
+                        <tr class="bg-navy text-white">
+                            <th class="p-3 border border-blue-900 superbold">HORÁRIO</th>
+                            <th class="p-3 border border-blue-900 superbold">SEGUNDA</th>
+                            <th class="p-3 border border-blue-900 superbold">TERÇA</th>
+                            <th class="p-3 border border-blue-900 superbold">QUARTA</th>
+                            <th class="p-3 border border-blue-900 superbold">QUINTA</th>
+                            <th class="p-3 border border-blue-900 superbold">SEXTA</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center regular text-blue-900"></tbody>
+                </table>
+            </div>
+            <p class="mt-2 text-xs text-slate-600 flex items-center gap-1">
+                <span class="material-icons text-base">info</span>
+                Clique no "×" para remover um bloco. Salva automaticamente no navegador.
+            </p>
+        </div>
+    </main>
+
+    {% include 'includes/footer.html' %}
+</div>
+</body>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    window.coursesFromDB = {{ courses_json|safe }};
+</script>
+<script src="{% static 'js/grade_horaria.js' %}?v=4"></script>
+{% endblock %}
