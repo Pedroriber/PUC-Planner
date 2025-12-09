@@ -1,69 +1,198 @@
- body {
-            font-family: 'Rethink Sans', sans-serif;
-        }
-        .superbold {
-            font-weight: 700;
-        }
-        .regular {
-            font-weight: 400;
-        }
-        .flowchart-item {
-        position: absolute;
-        min-width: 120px;
-        padding: 6px 14px;
-        border: 2px solid #0000a9;
-        border-radius: 10px;
-        background: linear-gradient(180deg, #ffffff 0%, #f5f7ff 100%);
-        color: #00005f;
-        font-weight: 700;
-        font-size: 0.9rem;
-        text-align: center;
-        box-shadow: 0 3px 6px rgba(0, 0, 100, 0.12);
-        transition: all 0.25s ease;
-        cursor: pointer;
-        }
+body {
+    font-family: 'Rethink Sans', sans-serif;
+}
 
-        /* Efeito ao passar o mouse */
-        .flowchart-item:hover {
-        background: #e9edff;
-        box-shadow: 0 0 12px 3px rgba(0, 0, 180, 0.4);
-        transform: translateY(-2px);
-        }
+.superbold {
+    font-weight: 700;
+}
 
-        /* Linhas do fluxograma */
-        svg line {
-        stroke: #0000a9;
-        stroke-width: 2.2;
-        transition: stroke 0.2s ease;
-        }
+.regular {
+    font-weight: 400;
+}
 
-        svg line:hover {
-        stroke: #1b45ff;
-        }
+.flowchart-item {
+    position: absolute;
+    min-width: 120px;
+    padding: 6px 14px;
+    border: 2px solid #0000a9;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #ffffff 0%, #f5f7ff 100%);
+    color: #00005f;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-align: center;
+    box-shadow: 0 3px 6px rgba(0, 0, 100, 0.12);
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
 
-        .bg-navy {
-            background-color: #030053;
-        }
+/* Efeito ao passar o mouse */
+.flowchart-item:hover {
+    background: #e9edff;
+    box-shadow: 0 0 12px 3px rgba(0, 0, 180, 0.4);
+    transform: translateY(-2px);
+}
 
-        .period-labels {
-            position: absolute;
-            left: -55px;
-            top: 0;
-            width: 50px;
-            height: 100%;
-            pointer-events: none;
-        }
+/* Linhas do fluxograma – só para <line>; <path> é colorido via JS */
+svg line {
+    stroke: #0000a9;
+    stroke-width: 2.2;
+    transition: stroke 0.2s ease;
+}
 
-        .period-label {
-            position: absolute;
-            transform: translateY(-12px);
-            font-weight: 700;
-            color: #0f1f80;
-            font-size: 1.1rem;
-        }
+svg line:hover {
+    stroke: #1b45ff;
+}
 
-        .period-label-number {
-            display: inline-block;
-        }
+.bg-navy {
+    background-color: #030053;
+}
 
-        
+.period-labels {
+    position: absolute;
+    left: -55px;
+    top: 0;
+    width: 50px;
+    height: 100%;
+    pointer-events: none;
+}
+
+.period-label {
+    position: absolute;
+    transform: translateY(-12px);
+    font-weight: 700;
+    color: #0f1f80;
+    font-size: 1.1rem;
+}
+
+.period-label-number {
+    display: inline-block;
+}
+
+/* ================================
+   CORES POR IMPORTÂNCIA (PRÉ/CO)
+   ================================ */
+
+/* até 2 dependentes → VERDE */
+.flowchart-item.importance-low {
+    border-color: #15803d;
+    background: linear-gradient(180deg, #ecfdf3 0%, #dcfce7 100%);
+    color: #064e3b;
+}
+
+/* 3 a 4 dependentes → VERMELHO */
+.flowchart-item.importance-medium {
+    border-color: #b91c1c;
+    background: linear-gradient(180deg, #fef2f2 0%, #fee2e2 100%);
+    color: #7f1d1d;
+}
+
+/* 5+ dependentes → MARROM */
+.flowchart-item.importance-high {
+    border-color: #78350f;
+    background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%);
+    color: #78350f;
+    box-shadow: 0 4px 10px rgba(88, 28, 12, 0.35);
+}
+
+/* Hover mantém uma leve animação */
+.flowchart-item.importance-low:hover {
+    box-shadow: 0 0 12px 3px rgba(22, 163, 74, 0.45);
+}
+
+.flowchart-item.importance-medium:hover {
+    box-shadow: 0 0 12px 3px rgba(220, 38, 38, 0.45);
+}
+
+.flowchart-item.importance-high:hover {
+    box-shadow: 0 0 12px 3px rgba(120, 53, 15, 0.45);
+}
+
+/* ================================
+   LEGENDA (QUADRADINHOS)
+   ================================ */
+
+.flow-legend {
+    font-size: 0.8rem;
+    color: #111827;
+}
+
+.flow-legend-card {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    padding: 8px 12px;
+    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.12);
+    min-width: 230px;
+}
+
+.flow-legend-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+    color: #0f172a;
+}
+
+.flow-legend-subtitle {
+    font-size: 0.7rem;
+    color: #4b5563;
+    margin-bottom: 4px;
+}
+
+.flow-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2px;
+}
+
+.flow-legend-label {
+    font-size: 0.75rem;
+}
+
+/* quadradinhos de cor da legenda dos blocos */
+.flow-legend-color {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    border: 2px solid transparent;
+}
+
+/* cores batendo com as classes dos blocos */
+.flow-legend-color-low {
+    border-color: #15803d;
+    background: linear-gradient(180deg, #ecfdf3 0%, #dcfce7 100%);
+}
+
+.flow-legend-color-medium {
+    border-color: #b91c1c;
+    background: linear-gradient(180deg, #fef2f2 0%, #fee2e2 100%);
+}
+
+.flow-legend-color-high {
+    border-color: #78350f;
+    background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%);
+}
+
+/* ================================
+   LEGENDA DAS LINHAS (SETAS)
+   ================================ */
+
+.flow-legend-line {
+    width: 32px;
+    height: 0;
+    border-top-width: 3px;
+    border-top-style: solid;
+    border-radius: 9999px;
+}
+
+.flow-legend-line-prereq {
+    border-top-color: #000080;   /* mesmo que DEFAULT_STROKE */
+}
+
+.flow-legend-line-coreq {
+    border-top-color: #f97316;   /* mesmo que COREQ_STROKE */
+    border-top-style: dashed;
+}
