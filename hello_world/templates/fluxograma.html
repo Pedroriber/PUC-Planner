@@ -26,11 +26,14 @@
                 O objetivo do fluxograma é visualizar, de uma forma mais visual, as dependências entre disciplinas. Para começar, digite o seu curso na barra de pesquisa abaixo.
             </p>
             <div class="relative w-full max-w-lg">
-                <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-3xl">
+                <button id="course-search-trigger" type="button"
+                        class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-3xl focus:outline-none"
+                        aria-label="Buscar fluxograma">
                     search
-                </span>
+                </button>
                 <input id="course-search" class="w-full pl-14 pr-4 py-4 border-2 border-navy rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-navy" placeholder="Nome do curso" type="text" autocomplete="off"/>
                 <div id="suggestions-container" class="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 shadow-lg hidden"></div>
+                <p id="search-feedback" class="text-sm text-red-600 mt-3 hidden"></p>
             </div>
             {% if program %}
             <div class="mt-8 text-center">
@@ -57,6 +60,9 @@
     {% include 'includes/footer.html' %}
 </div>
 
+<script>
+    window.fluxogramaCourses = {{ available_courses_json|default:"[]"|safe }};
+</script>
 <script src="{% static 'js/buscaFluxograma.js' %}"></script>
 </body>
 {% endblock %}
