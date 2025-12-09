@@ -213,7 +213,13 @@ def consulta_disciplina(request):
 
 @login_required
 def fluxograma(request):
-    return render(request, "fluxograma.html")
+    course_names = list(
+        Curso.objects.order_by('nome').values_list('nome', flat=True)
+    )
+    context = {
+        "available_courses_json": json.dumps(course_names, ensure_ascii=False)
+    }
+    return render(request, "fluxograma.html", context)
 
 
 @login_required
